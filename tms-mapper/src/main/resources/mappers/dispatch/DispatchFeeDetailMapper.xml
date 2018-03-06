@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lnet.tms.mapper.DispatchFeeDetailMapper">
+    <resultMap id="BaseResultMap" type="com.lnet.model.tms.dispatch.dispatchEntity.DispatchFeeDetail">
+        <id column="DISPATCH_FEE_DETAIL_ID" property="dispatchFeeDetailId" jdbcType="VARCHAR"/>
+        <result column="DISPATCH_ID" property="dispatchId" jdbcType="VARCHAR"/>
+        <result column="FEE_ACCOUNT_CODE" property="feeAccountCode" jdbcType="NVARCHAR"/>
+        <result column="AMOUNT" property="amount" jdbcType="DECIMAL"/>
+        <result column="REMARK" property="remark" jdbcType="NVARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    DISPATCH_FEE_DETAIL_ID, DISPATCH_ID, FEE_ACCOUNT_CODE, AMOUNT, REMARK
+  </sql>
+    <select id="findByDispatchId" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from DISPATCH_FEE_DETAIL
+        where DISPATCH_ID = #{dispatchId,jdbcType=VARCHAR}
+    </select>
+    <insert id="batchInsert" parameterType="java.util.List">
+        insert into DISPATCH_FEE_DETAIL (<include refid="Base_Column_List"/>)
+        (
+        <foreach collection="list" item="item" index="index" separator="union all">
+            select #{item.dispatchFeeDetailId,jdbcType=VARCHAR}, #{item.dispatchId,jdbcType=VARCHAR},
+            #{item.feeAccountCode,jdbcType=NVARCHAR}, #{item.amount,jdbcType=DECIMAL}, #{item.remark,jdbcType=NVARCHAR}
+            from dual
+        </foreach>
+        )
+    </insert>
+    <update id="batchUpdate" parameterType="java.util.List">
+        <foreach collection="list" item="item" index="index" open="begin" close=";end;" separator=";">
+            update DISPATCH_FEE_DETAIL
+            set DISPATCH_ID = #{item.dispatchId,jdbcType=VARCHAR},
+            FEE_ACCOUNT_CODE = #{item.feeAccountCode,jdbcType=NVARCHAR},
+            AMOUNT = #{item.amount,jdbcType=DECIMAL},
+            REMARK = #{item.remark,jdbcType=NVARCHAR}
+            where DISPATCH_FEE_DETAIL_ID = #{item.dispatchFeeDetailId,jdbcType=VARCHAR}
+        </foreach>
+    </update>
+</mapper>

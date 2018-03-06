@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lnet.tms.mapper.ExceptionLogMapper" >
+
+    <resultMap id="BaseResultMap" type="com.lnet.model.tms.exception.exceptionEntity.OperationExceptionLog" >
+        <id column="ID" property="id" jdbcType="VARCHAR" />
+        <result column="EXCEPTION_CODE" property="exceptionCode" jdbcType="VARCHAR" />
+        <result column="STATUS" property="status" jdbcType="VARCHAR" />
+        <result column="REMARK" property="remark" jdbcType="NVARCHAR" />
+        <result column="OPERATE_DATE" property="operateDate" jdbcType="TIMESTAMP" />
+        <result column="OPERATE_USER_NAME" property="operateUserName" jdbcType="NVARCHAR" />
+    </resultMap>
+
+    <sql id="Base_Column_List" >
+        ID, EXCEPTION_CODE, STATUS, REMARK, OPERATE_DATE, OPERATE_USER_NAME
+    </sql>
+
+    <insert id="insert" parameterType="com.lnet.model.tms.exception.exceptionEntity.OperationExceptionLog" >
+        INSERT INTO OPERATION_EXCEPTION_LOG (<include refid="Base_Column_List"/>)
+        VALUES (#{id,jdbcType=VARCHAR}, #{exceptionCode,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR},
+        #{remark,jdbcType=NVARCHAR}, #{operateDate,jdbcType=TIMESTAMP}, #{operateUserName,jdbcType=NVARCHAR}
+        )
+    </insert>
+
+    <insert id="batchInsert" parameterType="list">
+        INSERT INTO OPERATION_EXCEPTION_LOG (<include refid="Base_Column_List"/>)
+        <foreach collection="list" item="item" index="index" open="(" close=")" separator="UNION ALL">
+            SELECT
+            #{item.id,jdbcType=VARCHAR},
+            #{item.exceptionCode,jdbcType=VARCHAR},
+            #{item.status,jdbcType=VARCHAR},
+            #{item.remark,jdbcType=NVARCHAR},
+            #{item.operateDate,jdbcType=TIMESTAMP},
+            #{item.operateUserName,jdbcType=NVARCHAR}
+            FROM DUAL
+        </foreach>
+    </insert>
+</mapper>

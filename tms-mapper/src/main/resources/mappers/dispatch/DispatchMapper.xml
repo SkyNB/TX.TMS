@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lnet.tms.mapper.DispatchMapper">
+    <resultMap id="BaseResultMap" type="com.lnet.model.tms.dispatch.dispatchEntity.Dispatch">
+        <id column="DISPATCH_ID" property="dispatchId" jdbcType="VARCHAR"/>
+        <result column="DISPATCH_NUMBER" property="dispatchNumber" jdbcType="VARCHAR"/>
+        <result column="BRANCH_CODE" property="branchCode" jdbcType="VARCHAR"/>
+        <result column="SITE_CODE" property="siteCode" jdbcType="VARCHAR"/>
+        <result column="VEHICLE_ID" property="vehicleId" jdbcType="VARCHAR"/>
+        <result column="VEHICLE_TYPE_ID" property="vehicleTypeId" jdbcType="VARCHAR"/>
+        <result column="VEHICLE_NUMBER" property="vehicleNumber" jdbcType="NVARCHAR"/>
+        <result column="DRIVER" property="driver" jdbcType="NVARCHAR"/>
+        <result column="DRIVER_PHONE" property="driverPhone" jdbcType="NVARCHAR"/>
+        <result column="STATUS" property="status" jdbcType="VARCHAR"/>
+        <result column="TOTAL_PACKAGE_QUANTITY" property="totalPackageQuantity" jdbcType="DECIMAL"/>
+        <result column="TOTAL_VOLUME" property="totalVolume" jdbcType="DECIMAL"/>
+        <result column="TOTAL_WEIGHT" property="totalWeight" jdbcType="DECIMAL"/>
+        <result column="START_ADDRESS" property="startAddress" jdbcType="NVARCHAR"/>
+        <result column="DEST_ADDRESS" property="destAddress" jdbcType="NVARCHAR"/>
+        <result column="EXPECT_FINISH_TIME" property="expectFinishTime" jdbcType="TIMESTAMP"/>
+        <result column="ASSIGN_DATE" property="assignDate" jdbcType="TIMESTAMP"/>
+        <result column="ACCEPT_DATE" property="acceptDate" jdbcType="TIMESTAMP"/>
+        <result column="START_DATE" property="startDate" jdbcType="TIMESTAMP"/>
+        <result column="FINISHED_DATE" property="finishedDate" jdbcType="TIMESTAMP"/>
+        <result column="REMARK" property="remark" jdbcType="NVARCHAR"/>
+        <result column="CREATED_BY" property="createdBy" jdbcType="VARCHAR"/>
+        <result column="CREATED_DATE" property="createdDate" jdbcType="TIMESTAMP"/>
+        <result column="MODIFIED_BY" property="modifiedBy" jdbcType="VARCHAR"/>
+        <result column="MODIFIED_DATE" property="modifiedDate" jdbcType="TIMESTAMP"/>
+        <result column="TOTAL_FEE" property="totalFee" jdbcType="DECIMAL"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    DISPATCH_ID, DISPATCH_NUMBER, BRANCH_CODE, SITE_CODE, VEHICLE_ID, VEHICLE_TYPE_ID,
+    VEHICLE_NUMBER, DRIVER, DRIVER_PHONE, STATUS,
+    TOTAL_PACKAGE_QUANTITY, TOTAL_VOLUME, TOTAL_WEIGHT, START_ADDRESS, DEST_ADDRESS, 
+    EXPECT_FINISH_TIME, ASSIGN_DATE, ACCEPT_DATE, START_DATE, FINISHED_DATE, REMARK, 
+    CREATED_BY, CREATED_DATE, MODIFIED_BY, MODIFIED_DATE,TOTAL_FEE
+  </sql>
+    <select id="get" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from DISPATCH
+        where DISPATCH_ID = #{dispatchId,jdbcType=VARCHAR}
+    </select>
+    <select id="getByNo" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from DISPATCH
+        where DISPATCH_NUMBER = #{dispatchNo,jdbcType=VARCHAR}
+    </select>
+    <insert id="insert" parameterType="com.lnet.model.tms.dispatch.dispatchEntity.Dispatch">
+    insert into DISPATCH (DISPATCH_ID, DISPATCH_NUMBER, BRANCH_CODE, 
+      SITE_CODE, VEHICLE_ID, VEHICLE_TYPE_ID,
+      VEHICLE_NUMBER, DRIVER,
+      DRIVER_PHONE, STATUS,
+      TOTAL_PACKAGE_QUANTITY, TOTAL_VOLUME, TOTAL_WEIGHT, 
+      START_ADDRESS, DEST_ADDRESS, EXPECT_FINISH_TIME, 
+      ASSIGN_DATE, ACCEPT_DATE, START_DATE, 
+      FINISHED_DATE, REMARK, CREATED_BY, 
+      CREATED_DATE, MODIFIED_BY, MODIFIED_DATE,TOTAL_FEE
+      )
+    values (#{dispatchId,jdbcType=VARCHAR}, #{dispatchNumber,jdbcType=VARCHAR}, #{branchCode,jdbcType=VARCHAR}, 
+      #{siteCode,jdbcType=VARCHAR}, #{vehicleId,jdbcType=VARCHAR}, #{vehicleTypeId,jdbcType=VARCHAR},
+      #{vehicleNumber,jdbcType=NVARCHAR}, #{driver,jdbcType=NVARCHAR},
+      #{driverPhone,jdbcType=NVARCHAR}, #{status,jdbcType=VARCHAR},
+      #{totalPackageQuantity,jdbcType=DECIMAL}, #{totalVolume,jdbcType=DECIMAL}, #{totalWeight,jdbcType=DECIMAL}, 
+      #{startAddress,jdbcType=NVARCHAR}, #{destAddress,jdbcType=NVARCHAR}, #{expectFinishTime,jdbcType=TIMESTAMP}, 
+      #{assignDate,jdbcType=TIMESTAMP}, #{acceptDate,jdbcType=TIMESTAMP}, #{startDate,jdbcType=TIMESTAMP}, 
+      #{finishedDate,jdbcType=TIMESTAMP}, #{remark,jdbcType=NVARCHAR}, #{createdBy,jdbcType=VARCHAR}, 
+      #{createdDate,jdbcType=TIMESTAMP}, #{modifiedBy,jdbcType=VARCHAR}, #{modifiedDate,jdbcType=TIMESTAMP},
+      #{totalFee,jdbcType=DECIMAL}
+      )
+  </insert>
+    <update id="update" parameterType="com.lnet.model.tms.dispatch.dispatchEntity.Dispatch">
+    update DISPATCH
+    set DISPATCH_NUMBER = #{dispatchNumber,jdbcType=VARCHAR},
+      BRANCH_CODE = #{branchCode,jdbcType=VARCHAR},
+      SITE_CODE = #{siteCode,jdbcType=VARCHAR},
+      VEHICLE_ID = #{vehicleId,jdbcType=VARCHAR},
+      VEHICLE_TYPE_ID = #{vehicleTypeId,jdbcType=VARCHAR},
+      VEHICLE_NUMBER = #{vehicleNumber,jdbcType=NVARCHAR},
+      DRIVER = #{driver,jdbcType=NVARCHAR},
+      DRIVER_PHONE = #{driverPhone,jdbcType=NVARCHAR},
+      STATUS = #{status,jdbcType=VARCHAR},
+      TOTAL_PACKAGE_QUANTITY = #{totalPackageQuantity,jdbcType=DECIMAL},
+      TOTAL_VOLUME = #{totalVolume,jdbcType=DECIMAL},
+      TOTAL_WEIGHT = #{totalWeight,jdbcType=DECIMAL},
+      START_ADDRESS = #{startAddress,jdbcType=NVARCHAR},
+      DEST_ADDRESS = #{destAddress,jdbcType=NVARCHAR},
+      EXPECT_FINISH_TIME = #{expectFinishTime,jdbcType=TIMESTAMP},
+      ASSIGN_DATE = #{assignDate,jdbcType=TIMESTAMP},
+      ACCEPT_DATE = #{acceptDate,jdbcType=TIMESTAMP},
+      START_DATE = #{startDate,jdbcType=TIMESTAMP},
+      FINISHED_DATE = #{finishedDate,jdbcType=TIMESTAMP},
+      REMARK = #{remark,jdbcType=NVARCHAR},
+      CREATED_BY = #{createdBy,jdbcType=VARCHAR},
+      CREATED_DATE = #{createdDate,jdbcType=TIMESTAMP},
+      MODIFIED_BY = #{modifiedBy,jdbcType=VARCHAR},
+      MODIFIED_DATE = #{modifiedDate,jdbcType=TIMESTAMP},
+      TOTAL_FEE = #{totalFee,jdbcType=DECIMAL}
+    where DISPATCH_ID = #{dispatchId,jdbcType=VARCHAR}
+  </update>
+    <select id="pageList" resultType="com.lnet.model.tms.dispatch.dispatchDto.DispatchDto">
+        select
+        <include refid="Base_Column_List"/>
+        from DISPATCH
+        <where>
+            <if test="dispatchNumber != null ">
+                DISPATCH_NUMBER like CONCAT(CONCAT('%', #{dispatchNumber}), '%')
+            </if>
+            <if test="driver != null ">
+                AND DRIVER like CONCAT(CONCAT('%', #{driver}), '%')
+            </if>
+            <if test="branchCode != null ">
+                AND BRANCH_CODE = #{branchCode,jdbcType=NVARCHAR}
+            </if>
+            <if test="siteCode != null ">
+                AND SITE_CODE = #{siteCode,jdbcType=NVARCHAR}
+            </if>
+            <if test="status != null ">
+                AND STATUS = #{status,jdbcType=NVARCHAR}
+            </if>
+            <if test="createdBy != null ">
+                AND created_By = #{createdBy,jdbcType=NVARCHAR}
+            </if>
+            <if test="month != null ">
+                AND to_char(created_Date,'YYYY-MM') = #{month,jdbcType=NVARCHAR}
+            </if>
+        </where>
+        <if test="orderBy !=null">
+            order by ${orderBy}
+        </if>
+        <if test="orderBy ==null">
+            order by CREATED_DATE desc
+        </if>
+    </select>
+    <select id="getByVehicleIdAndStatus" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from DISPATCH
+        <where>
+            <if test="vehicleId != null ">
+                VEHICLE_ID = #{vehicleId,jdbcType=NVARCHAR}
+            </if>
+            <if test="status != null ">
+                AND STATUS = #{status,jdbcType=NVARCHAR}
+            </if>
+        </where>
+        order by CREATED_DATE desc
+    </select>
+    <update id="batchUpdateStatus">
+        update DISPATCH set STATUS = #{status,jdbcType=NVARCHAR} where DISPATCH_ID in
+        <foreach collection="dispatchIds" open="(" close=")" separator="," index="index" item="dispatchId">
+            #{dispatchId,jdbcType=NVARCHAR}
+        </foreach>
+    </update>
+    <update id="updateStatus">
+        update DISPATCH set STATUS = #{status,jdbcType=NVARCHAR} where DISPATCH_ID =#{dispatchId,jdbcType=NVARCHAR}
+    </update>
+    <select id="getDispatchSequenceNo" resultType="java.lang.Long" useCache="false" flushCache="true">
+        select SEQ_DISPATCH.Nextval from dual
+    </select>
+    <select id="searchDispatch" resultType="com.lnet.model.tms.dispatch.dispatchEntity.Dispatch">
+        SELECT * FROM DISPATCH WHERE branch_code = #{branchCode} and site_code = #{siteCode}
+        <if test="vehicleId!=null">
+            and VEHICLE_ID = #{vehicleId,jdbcType=NVARCHAR}
+        </if>
+        <if test="condition!=null">
+            and (DISPATCH_NUMBER like CONCAT(CONCAT('%', #{condition}), '%') or DRIVER like CONCAT(CONCAT('%',
+            #{condition}), '%'))
+        </if>
+
+        and trunc(assign_Date) <![CDATA[ >=]]> TO_DATE(#{assignDate,jdbcType=NVARCHAR},'YYYY-MM-dd')
+
+    </select>
+    <select id="searchGroupByMonth" resultType="com.lnet.model.tms.dispatch.dispatchDto.DispatchMonthDto">
+        select to_char(created_Date,'YYYY-MM') month,sum(total_package_quantity) sum_package_qty,
+        sum(total_volume) sum_volume,sum(total_weight) sum_weight,count(0) count
+        from DISPATCH
+        WHERE created_by = #{createdBy}
+        group by to_char(created_Date,'YYYY-MM')  order by month desc
+    </select>
+    <select id="findByOrderNoAndSiteCode" resultMap="BaseResultMap">
+        SELECT DI.* FROM DISPATCH DI LEFT JOIN DISPATCH_ITEM DII
+        ON DII.DISPATCH_ID = DI.DISPATCH_ID
+        WHERE DI.SITE_CODE = #{siteCode,jdbcType=VARCHAR}
+        AND DII.ORDER_NO = #{orderNo,jdbcType=VARCHAR}
+    </select>
+    <select id="getTodayDispatch" resultType="java.lang.Integer">
+        select count(0) count from dispatch d left JOIN dispatch_item di on d.dispatch_id = di.dispatch_id where
+        d.branch_code= #{branchCode} AND d.SITE_CODE=#{siteCode} and trunc(start_Date) = trunc(sysdate)
+    </select>
+    <select id="getByVehicleIdsAndStatus" resultType="com.lnet.model.tms.dispatch.dispatchEntity.Dispatch">
+        SELECT * from dispatch d where status = #{status} and vehicle_Id in
+        <foreach collection="vehicleIds" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+</mapper>

@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lnet.tms.mapper.OrderTransferMapper">
+    <resultMap id="BaseResultMap" type="com.lnet.model.tms.order.orderEntity.OrderTransfer">
+        <id column="TRANSFER_ID" property="transferId" jdbcType="VARCHAR"/>
+        <result column="TRANSFER_NUMBER" property="transferNumber" jdbcType="VARCHAR"/>
+        <result column="ORDER_NO" property="orderNo" jdbcType="VARCHAR"/>
+        <result column="CARRIER_CODE" property="carrierCode" jdbcType="VARCHAR"/>
+        <result column="CONSIGN_ORDER_NO" property="consignOrderNo" jdbcType="VARCHAR"/>
+        <result column="TRANSFER_ORGANIZATION_CODE" property="transferOrganizationCode" jdbcType="VARCHAR"/>
+        <result column="TRANSFER_SITE_CODE" property="transferSiteCode" jdbcType="VARCHAR"/>
+        <result column="VOLUME" property="volume" jdbcType="DECIMAL"/>
+        <result column="WEIGHT" property="weight" jdbcType="DECIMAL"/>
+        <result column="PACKAGE_QUANTITY" property="packageQuantity" jdbcType="DECIMAL"/>
+        <result column="RECEIPT_PAGE_NUMBER" property="receiptPageNumber" jdbcType="DECIMAL"/>
+        <result column="DISPATCH_TYPE" property="dispatchType" jdbcType="VARCHAR"/>
+        <result column="ARRIVE_TIME" property="arriveTime" jdbcType="TIMESTAMP"/>
+        <result column="ARRIVE_REMARK" property="arriveRemark" jdbcType="NVARCHAR"/>
+        <result column="RECEIPT_INFO" property="receiptInfo" jdbcType="NVARCHAR"/>
+        <result column="RECEIPT_POST_DATE" property="receiptPostDate" jdbcType="TIMESTAMP"/>
+        <result column="CREATE_DATE" property="createDate" jdbcType="TIMESTAMP"/>
+        <result column="CREATE_BY" property="createBy" jdbcType="VARCHAR"/>
+        <result column="STATUS" property="status" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+      TRANSFER_ID, TRANSFER_NUMBER, ORDER_NO,CARRIER_CODE, CONSIGN_ORDER_NO, TRANSFER_ORGANIZATION_CODE,
+      TRANSFER_SITE_CODE, VOLUME, WEIGHT, PACKAGE_QUANTITY,RECEIPT_PAGE_NUMBER, DISPATCH_TYPE, ARRIVE_TIME,
+      ARRIVE_REMARK,RECEIPT_INFO, RECEIPT_POST_DATE, CREATE_DATE, CREATE_BY, STATUS
+    </sql>
+    <insert id="batchInsert" parameterType="java.util.List">
+        insert into ORDER_TRANSFER (<include refid="Base_Column_List"/>)
+        (
+        <foreach collection="list" item="item" index="index" separator="union all">
+            select #{item.transferId,jdbcType=VARCHAR}, #{item.transferNumber,jdbcType=VARCHAR},
+            #{item.orderNo,jdbcType=VARCHAR},#{item.carrierCode,jdbcType=VARCHAR},
+            #{item.consignOrderNo,jdbcType=VARCHAR}, #{item.transferOrganizationCode,jdbcType=VARCHAR},
+            #{item.transferSiteCode,jdbcType=VARCHAR}, #{item.volume,jdbcType=DECIMAL}, #{item.weight,jdbcType=DECIMAL},
+            #{item.packageQuantity,jdbcType=DECIMAL}, #{item.receiptPageNumber,jdbcType=DECIMAL},
+            #{item.dispatchType,jdbcType=VARCHAR},
+            #{item.arriveTime,jdbcType=TIMESTAMP},#{item.arriveRemark,jdbcType=NVARCHAR},
+            #{item.receiptInfo,jdbcType=NVARCHAR}, #{item.receiptPostDate,jdbcType=TIMESTAMP},
+            #{item.createDate,jdbcType=TIMESTAMP},
+            #{item.createBy,jdbcType=VARCHAR}, #{item.status,jdbcType=VARCHAR} from dual
+        </foreach>
+        )
+    </insert>
+    <update id="batchUpdate" parameterType="java.util.List">
+        <foreach collection="list" item="item" index="index" open="begin" close=";end;" separator=";">
+            update ORDER_TRANSFER
+            set TRANSFER_NUMBER = #{item.transferNumber,jdbcType=VARCHAR},
+            ORDER_NO = #{item.orderNo,jdbcType=VARCHAR},
+            CARRIER_CODE = #{item.carrierCode,jdbcType=VARCHAR},
+            CONSIGN_ORDER_NO = #{item.consignOrderNo,jdbcType=VARCHAR},
+            TRANSFER_ORGANIZATION_CODE = #{item.transferOrganizationCode,jdbcType=VARCHAR},
+            TRANSFER_SITE_CODE = #{item.transferSiteCode,jdbcType=VARCHAR},
+            VOLUME = #{item.volume,jdbcType=DECIMAL},
+            WEIGHT = #{item.weight,jdbcType=DECIMAL},
+            PACKAGE_QUANTITY = #{item.packageQuantity,jdbcType=DECIMAL},
+            RECEIPT_PAGE_NUMBER = #{item.receiptPageNumber,jdbcType=DECIMAL},
+            DISPATCH_TYPE = #{item.dispatchType,jdbcType=VARCHAR},
+            ARRIVE_TIME = #{item.arriveTime,jdbcType=TIMESTAMP},
+            ARRIVE_REMARK = #{item.arriveRemark,jdbcType=NVARCHAR},
+            RECEIPT_INFO = #{item.receiptInfo,jdbcType=NVARCHAR},
+            RECEIPT_POST_DATE = #{item.receiptPostDate,jdbcType=TIMESTAMP},
+            CREATE_DATE = #{item.createDate,jdbcType=TIMESTAMP},
+            CREATE_BY = #{item.createBy,jdbcType=VARCHAR},
+            STATUS = #{item.status,jdbcType=VARCHAR}
+            where TRANSFER_ID = #{item.transferId,jdbcType=VARCHAR}
+        </foreach>
+    </update>
+    <update id="batchUpdateStatus">
+        update ORDER_TRANSFER set STATUS = #{status,jdbcType=NVARCHAR} where
+        TRANSFER_SITE_CODE = #{siteCode,jdbcType=VARCHAR} and
+        ORDER_NO in
+        <foreach collection="orderNos" open="(" close=")" separator="," index="index" item="orderNo">
+            #{orderNo,jdbcType=NVARCHAR}
+        </foreach>
+    </update>
+    <select id="findBySiteCodeAndOrderNos" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from ORDER_TRANSFER
+        where TRANSFER_SITE_CODE = #{siteCode,jdbcType=VARCHAR} and
+        ORDER_NO in
+        <foreach collection="orderNos" open="(" close=")" separator="," index="index" item="orderNo">
+            #{orderNo,jdbcType=NVARCHAR}
+        </foreach>
+    </select>
+    <select id="pageList" resultType="com.lnet.model.tms.order.orderDto.OrderTransferListDto">
+        select OT.TRANSFER_ID,
+        OT.TRANSFER_NUMBER,
+        OT.ORDER_NO,
+        OT.CONSIGN_ORDER_NO,
+        OT.TRANSFER_ORGANIZATION_CODE,
+        OT.TRANSFER_SITE_CODE,
+        OT.VOLUME,
+        OT.WEIGHT,
+        OT.PACKAGE_QUANTITY,
+        OT.DISPATCH_TYPE,
+        OT.ARRIVE_TIME,
+        OT.ARRIVE_REMARK,
+        OT.RECEIPT_INFO,
+        OT.RECEIPT_POST_DATE,
+        OT.CREATE_DATE,
+        OT.CREATE_BY,
+        OT.STATUS,
+        OT.RECEIPT_PAGE_NUMBER,
+        OT.CARRIER_CODE,
+        LO.BRANCH_CODE order_Org_Code,
+        LO.SITE_CODE ORDER_SITE_CODE,
+        LO.CUSTOMER_CODE,
+        LO.ORDER_DATE,
+        DA.DELIVERY_CITY,
+        DA.DELIVERY_ADDRESS,
+        DA.DELIVERY_COMPANY,
+        DA.DELIVERY_CONTACTS,
+        DA.DELIVERY_CONTACT_PHONE,
+        LO.TRANSPORT_TYPE,
+        LO.HANDOVER_TYPE,
+        LO.CUSTOMER_ORDER_NO
+        from order_transfer ot
+        left join logistics_order lo
+        on ot.order_no = lo.order_no
+        LEFT JOIN DELIVERY_ADDRESS DA
+        ON OT.ORDER_NO = DA.ORDER_NO
+        <where>
+            <if test="transferNumber != null ">
+                OT.TRANSFER_NUMBER like CONCAT(CONCAT('%', #{transferNumber}), '%')
+            </if>
+            <if test="orderNo != null ">
+                AND OT.ORDER_NO like CONCAT(CONCAT('%', #{orderNo}), '%')
+            </if>
+            <if test="orderOrgCode != null ">
+                AND LO.BRANCH_CODE = #{orderOrgCode,jdbcType=NVARCHAR}
+            </if>
+            <if test="orderSiteCode != null ">
+                AND LO.SITE_CODE = #{orderSiteCode,jdbcType=NVARCHAR}
+            </if>
+            <if test="transferOrganizationCode != null ">
+                AND OT.TRANSFER_ORGANIZATION_CODE = #{transferOrganizationCode,jdbcType=NVARCHAR}
+            </if>
+            <if test="transferSiteCode != null ">
+                AND OT.TRANSFER_SITE_CODE = #{transferSiteCode,jdbcType=NVARCHAR}
+            </if>
+            <if test="customerCode != null ">
+                AND LO.CUSTOMER_CODE = #{customerCode,jdbcType=NVARCHAR}
+            </if>
+            <if test="carrierCode != null ">
+                AND OT.CARRIER_CODE = #{carrierCode,jdbcType=NVARCHAR}
+            </if>
+            <if test="customerOrderNo != null ">
+                AND LO.CUSTOMER_ORDER_NO like CONCAT(CONCAT('%', #{customerOrderNo}), '%')
+            </if>
+            <if test="consignOrderNo != null ">
+                AND OT.CONSIGN_ORDER_NO like CONCAT(CONCAT('%', #{consignOrderNo}), '%')
+            </if>
+            <if test="status != null ">
+                AND OT.STATUS = #{status,jdbcType=NVARCHAR}
+            </if>
+        </where>
+        <if test="orderBy !=null">
+            order by ${orderBy}
+        </if>
+        <if test="orderBy ==null">
+            order by OT.CREATE_DATE desc
+        </if>
+    </select>
+    <select id="getTransferSequenceNo" resultType="java.lang.Long" useCache="false" flushCache="true">
+        select SEQ_TRANSFER.Nextval from dual
+    </select>
+    <update id="batchUpdateArriveInfo" parameterType="java.util.List">
+        <foreach collection="list" item="item" index="index" open="begin" close=";end;" separator=";">
+            update ORDER_TRANSFER
+            set
+            ARRIVE_TIME = #{item.arriveTime,jdbcType=TIMESTAMP},
+            ARRIVE_REMARK = #{item.arriveRemark,jdbcType=NVARCHAR},
+            STATUS = #{item.status,jdbcType=VARCHAR}
+            where TRANSFER_ID = #{item.transferId,jdbcType=VARCHAR}
+        </foreach>
+    </update>
+    <select id="getByOrderNoAndTransferSite" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from ORDER_TRANSFER
+        where TRANSFER_SITE_CODE = #{siteCode,jdbcType=VARCHAR} and
+        ORDER_NO = #{orderNo,jdbcType=VARCHAR}
+    </select>
+    <select id="reportPageList" resultType="com.lnet.model.tms.transfer.TransferReportListDto">
+        SELECT OT.TRANSFER_ID,
+        OT.TRANSFER_NUMBER,
+        OT.ORDER_NO,
+        OT.CARRIER_CODE,
+        OT.CONSIGN_ORDER_NO,
+        OT.TRANSFER_ORGANIZATION_CODE,
+        OT.TRANSFER_SITE_CODE,
+        OT.VOLUME,
+        OT.WEIGHT,
+        OT.PACKAGE_QUANTITY,
+        OT.DISPATCH_TYPE,
+        OT.ARRIVE_TIME,
+        OT.ARRIVE_REMARK,
+        OT.RECEIPT_PAGE_NUMBER,
+        OT.STATUS,
+        OT.RECEIPT_INFO,
+        OT.RECEIPT_POST_DATE,
+        LO.BRANCH_CODE ORDER_ORG_CODE,
+        LO.SITE_CODE ORDER_SITE_CODE,
+        LO.CUSTOMER_CODE,
+        LO.CUSTOMER_ORDER_NO,
+        LO.ORDER_DATE,
+        DA.DELIVERY_CITY,
+        DA.DELIVERY_COMPANY,
+        DA.DELIVERY_ADDRESS,
+        DA.DELIVERY_CONTACTS,
+        DA.DELIVERY_CONTACT_PHONE,
+        LO.TRANSPORT_TYPE,
+        LO.HANDOVER_TYPE
+        FROM ORDER_TRANSFER OT
+        LEFT JOIN LOGISTICS_ORDER LO ON OT.ORDER_NO = LO.ORDER_NO
+        LEFT JOIN DELIVERY_ADDRESS DA ON DA.ORDER_NO = LO.ORDER_NO
+        <where>
+            <if test="transferNumber != null ">
+                OT.TRANSFER_NUMBER like CONCAT(CONCAT('%', #{transferNumber}), '%')
+            </if>
+            <if test="orderNo != null ">
+                AND OT.ORDER_NO like CONCAT(CONCAT('%', #{orderNo}), '%')
+            </if>
+            <if test="orderOrgCode != null ">
+                AND LO.BRANCH_CODE = #{orderOrgCode,jdbcType=NVARCHAR}
+            </if>
+            <if test="orderSiteCode != null ">
+                AND LO.SITE_CODE = #{orderSiteCode,jdbcType=NVARCHAR}
+            </if>
+            <if test="transferOrganizationCode != null ">
+                AND OT.TRANSFER_ORGANIZATION_CODE = #{transferOrganizationCode,jdbcType=NVARCHAR}
+            </if>
+            <if test="transferSiteCode != null ">
+                AND OT.TRANSFER_SITE_CODE = #{transferSiteCode,jdbcType=NVARCHAR}
+            </if>
+            <if test="customerCode != null ">
+                AND LO.CUSTOMER_CODE = #{customerCode,jdbcType=NVARCHAR}
+            </if>
+            <if test="carrierCode != null ">
+                AND OT.CARRIER_CODE = #{carrierCode,jdbcType=NVARCHAR}
+            </if>
+            <if test="customerOrderNo != null ">
+                AND LO.CUSTOMER_ORDER_NO like CONCAT(CONCAT('%', #{customerOrderNo}), '%')
+            </if>
+            <if test="consignOrderNo != null ">
+                AND OT.CONSIGN_ORDER_NO like CONCAT(CONCAT('%', #{consignOrderNo}), '%')
+            </if>
+            <if test="deliveryContacts != null ">
+                AND DA.DELIVERY_CONTACTS like CONCAT(CONCAT('%', #{deliveryContacts}), '%')
+            </if>
+            <if test="deliveryCity != null ">
+                AND DA.DELIVERY_CITY like CONCAT(CONCAT('%', #{deliveryCity}), '%')
+            </if>
+            <if test="orderDateStart != null ">
+                AND LO.ORDER_DATE <![CDATA[ >=]]> to_date(#{orderDateStart},'yyyy-MM-dd')
+            </if>
+            <if test="orderDateEnd != null ">
+                AND LO.ORDER_DATE <![CDATA[ <=]]> to_date(#{orderDateEnd},'yyyy-MM-dd')
+            </if>
+            <if test="dispatchType != null ">
+                AND OT.DISPATCH_TYPE = #{dispatchType,jdbcType=NVARCHAR}
+            </if>
+        </where>
+        <if test="orderBy !=null">
+            order by ${orderBy}
+        </if>
+        <if test="orderBy ==null">
+            order by OT.CREATE_DATE desc
+        </if>
+    </select>
+</mapper>

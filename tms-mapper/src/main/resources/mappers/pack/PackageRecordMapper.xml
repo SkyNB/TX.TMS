@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lnet.tms.mapper.PackageRecordMapper">
+    <resultMap id="BaseResultMap" type="com.lnet.model.tms.pack.packEntity.PackageRecord">
+        <id column="RECORD_ID" property="recordId" jdbcType="VARCHAR"/>
+        <result column="PACKAGE_ID" property="packageId" jdbcType="VARCHAR"/>
+        <result column="PACKAGE_NO" property="packageNo" jdbcType="VARCHAR"/>
+        <result column="PACKING_USER" property="packingUser" jdbcType="VARCHAR"/>
+        <result column="PACKING_TIME" property="packingTime" jdbcType="TIMESTAMP"/>
+        <result column="SITE_CODE" property="siteCode" jdbcType="VARCHAR"/>
+        <result column="BRANCH_CODE" property="branchCode" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    RECORD_ID, PACKAGE_ID, PACKAGE_NO, PACKING_USER, PACKING_TIME, SITE_CODE, BRANCH_CODE
+  </sql>
+    <select id="selectById" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from PACKAGE_RECORD
+        where RECORD_ID = #{recordId,jdbcType=VARCHAR}
+    </select>
+    <select id="pageList" resultType="com.lnet.model.tms.pack.packEntity.PackageRecord">
+        select * from PACKAGE_RECORD
+        <where>
+            <if test="packageNo != null">
+                package_No LIKE CONCAT(CONCAT('%',#{packageNo}),'%')
+            </if>
+            <if test="branchCode != null">
+                branch_Code = #{branchCode}
+            </if>
+            <if test="siteCode != null">
+                site_Code = #{siteCode}
+            </if>
+        </where>
+        <if test="orderBy != null">
+            ORDER BY ${orderBy}
+        </if>
+    </select>
+    <select id="findByPackageId" resultType="com.lnet.model.tms.pack.packEntity.PackageRecord">
+      select * from PACKAGE_RECORD where
+      package_id = #{packageId,jdbcType=VARCHAR}
+    </select>
+    <select id="searchGroupByMonth" resultType="com.lnet.model.tms.pack.packDto.PackageMonthDto">
+    select to_char(packing_Time, 'YYYY-MM') month, count(0) count,
+    sum(volume) sum_volume,sum(weight) sum_weight
+      from (SELECT p.*, pr.packing_User, pr.packing_Time, pr.site_code, pr.branch_code, op.order_no
+          from package p left join Package_Record pr on pr.package_id = p.package_id left join Order_Package op
+            on op.package_id = p.package_id)
+    where packing_User = #{packageUser}
+ group by to_char(packing_Time, 'YYYY-MM') order by month desc
+  </select>
+    <select id="getTodayPackageCount" resultType="java.lang.Integer">
+        select count(package_no ) count from
+         PACKAGE_RECORD where branch_Code = #{branchCode} and site_Code = #{siteCode}
+        and trunc(sysdate) = trunc(packing_Time)
+    </select>
+    <delete id="deleteById" parameterType="java.lang.String">
+    delete from PACKAGE_RECORD
+    where RECORD_ID = #{recordId,jdbcType=VARCHAR}
+  </delete>
+    <delete id="deleteByNos">
+        delete from PACKAGE_RECORD
+    where package_id in (
+    SELECT op.package_id from order_package op where op.order_no in
+    <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+        #{item}
+    </foreach>
+    )
+    </delete>
+    <insert id="insert" parameterType="com.lnet.model.tms.pack.packEntity.PackageRecord">
+    insert into PACKAGE_RECORD (RECORD_ID, PACKAGE_ID, PACKAGE_NO, 
+      PACKING_USER, PACKING_TIME, SITE_CODE, 
+      BRANCH_CODE)
+    values (#{recordId,jdbcType=VARCHAR}, #{packageId,jdbcType=VARCHAR}, #{packageNo,jdbcType=VARCHAR}, 
+      #{packingUser,jdbcType=VARCHAR}, #{packingTime,jdbcType=TIMESTAMP}, #{siteCode,jdbcType=VARCHAR}, 
+      #{branchCode,jdbcType=VARCHAR})
+  </insert>
+    <insert id="batchInsert" parameterType="java.util.ArrayList">
+        insert into PACKAGE_RECORD (RECORD_ID, PACKAGE_ID, PACKAGE_NO,
+        PACKING_USER, PACKING_TIME, SITE_CODE,
+        BRANCH_CODE)
+        <foreach collection="list" index="index" item="item" close=")" open="(" separator="union all">
+            select #{item.recordId,jdbcType=VARCHAR},
+            #{item.packageId,jdbcType=VARCHAR},
+            #{item.packageNo,jdbcType=VARCHAR},
+            #{item.packingUser,jdbcType=VARCHAR},
+            #{item.packingTime,jdbcType=TIMESTAMP},
+            #{item.siteCode,jdbcType=VARCHAR},
+            #{item.branchCode,jdbcType=VARCHAR}
+            from dual
+        </foreach>
+    </insert>
+    <update id="update" parameterType="com.lnet.model.tms.pack.packEntity.PackageRecord">
+    update PACKAGE_RECORD
+    set PACKAGE_ID = #{packageId,jdbcType=VARCHAR},
+      PACKAGE_NO = #{packageNo,jdbcType=VARCHAR},
+      PACKING_USER = #{packingUser,jdbcType=VARCHAR},
+      PACKING_TIME = #{packingTime,jdbcType=TIMESTAMP},
+      SITE_CODE = #{siteCode,jdbcType=VARCHAR},
+      BRANCH_CODE = #{branchCode,jdbcType=VARCHAR}
+    where RECORD_ID = #{recordId,jdbcType=VARCHAR}
+  </update>
+</mapper>

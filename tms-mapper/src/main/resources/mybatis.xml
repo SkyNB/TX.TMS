@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <context:component-scan base-package="com.lnet.tms.mapper"/>
+
+    <!--datasource-->
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource" >
+        <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+        <!--<property name="url" value="jdbc:mysql://192.168.10.28:3306/lnet_tx_tms"/>
+        <property name="username" value="root"/>
+        <property name="password" value="Classes12"/>-->
+       <!-- <property name="driverClassName" value="oracle.jdbc.OracleDriver"/>
+        <property name="url" value="jdbc:oracle:thin:@//192.168.10.18:1521/orcl"/>
+        <property name="username" value="lnet_tx_tms"/>
+        <property name="password" value="lnet_tx_tms"/>-->
+
+        <property name="url" value="jdbc:mysql://www.56-net.com:3326/lnet_tx_tms"/>
+        <property name="username" value="root"/>
+        <property name="password" value="Itc-Mysqltest33"/>
+
+
+    </bean>
+
+    <import resource="classpath*:data-base.xml"/>
+
+    <!--mapper scan-->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.lnet.tms.mapper"/>
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"></property>
+    </bean>
+</beans>

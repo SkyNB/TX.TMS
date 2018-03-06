@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lnet.tms.mapper.ExceptionMapper">
+
+    <resultMap id="BaseResultMap" type="com.lnet.model.tms.exception.exceptionEntity.OperationException">
+        <id column="ID" property="id" jdbcType="VARCHAR"/>
+        <result column="CODE" property="code" jdbcType="VARCHAR"/>
+        <result column="OCCUR_TIME" property="occurTime" jdbcType="TIMESTAMP"/>
+        <result column="ADDRESS" property="address" jdbcType="VARCHAR"/>
+        <result column="BRANCH_CODE" property="branchCode" jdbcType="VARCHAR"/>
+        <result column="SITE_CODE" property="siteCode" jdbcType="VARCHAR"/>
+        <result column="CLASSIFICATION" property="classification" jdbcType="VARCHAR"/>
+        <result column="TYPE" property="typeCode" jdbcType="VARCHAR"/>
+        <result column="PERSONS_RESPONSIBLE" property="personsResponsible" jdbcType="NVARCHAR"/>
+        <result column="STATUS" property="status" jdbcType="VARCHAR"/>
+        <result column="REMARK" property="remark" jdbcType="NVARCHAR"/>
+        <result column="ORDER_NO" property="orderNo" jdbcType="VARCHAR"/>
+        <result column="PROCESSOR" property="processor" jdbcType="NVARCHAR"/>
+        <result column="GOODS_VALUE" property="goodsValue" jdbcType="DECIMAL"/>
+        <result column="COMPENSATION_TO_CUSTOMER" property="compensationToCustomer" jdbcType="DECIMAL"/>
+        <result column="INSURANCE" property="insurance" jdbcType="DECIMAL"/>
+        <result column="DAMAGE" property="damage" jdbcType="DECIMAL"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        ID, CODE, OCCUR_TIME, ADDRESS, BRANCH_CODE, SITE_CODE,
+        CLASSIFICATION, TYPE, PERSONS_RESPONSIBLE, STATUS, REMARK, ORDER_NO, PROCESSOR,
+        GOODS_VALUE, COMPENSATION_TO_CUSTOMER, INSURANCE, DAMAGE
+    </sql>
+
+    <insert id="insert" parameterType="com.lnet.model.tms.exception.exceptionEntity.OperationException">
+        INSERT INTO OPERATION_EXCEPTION (<include refid="Base_Column_List"/>)
+        VALUES (#{id,jdbcType=VARCHAR}, #{code,jdbcType=VARCHAR}, #{occurTime,jdbcType=TIMESTAMP},
+        #{address,jdbcType=VARCHAR}, #{branchCode,jdbcType=VARCHAR}, #{siteCode,jdbcType=VARCHAR},
+        #{classification,jdbcType=VARCHAR}, #{typeCode,jdbcType=VARCHAR}, #{personsResponsible,jdbcType=NVARCHAR},
+        #{status,jdbcType=VARCHAR}, #{remark,jdbcType=NVARCHAR}, #{orderNo,jdbcType=VARCHAR},
+        #{processor,jdbcType=NVARCHAR}, #{goodsValue, jdbcType=DECIMAL}, #{compensationToCustomer, jdbcType=DECIMAL},
+        #{insurance, jdbcType=DECIMAL}, #{damage, jdbcType=DECIMAL})
+    </insert>
+
+    <update id="updateStatusByCode">
+        UPDATE OPERATION_EXCEPTION SET STATUS = #{status,jdbcType=VARCHAR}, PROCESSOR = #{processor,jdbcType=NVARCHAR} WHERE CODE = #{code,jdbcType=VARCHAR}
+    </update>
+
+    <update id="updateStatusByOrderNo">
+        UPDATE OPERATION_EXCEPTION SET STATUS = #{status,jdbcType=VARCHAR}, PROCESSOR = #{processor,jdbcType=NVARCHAR} WHERE ORDER_NO = #{orderNo,jdbcType=VARCHAR}
+    </update>
+
+    <update id="close">
+        UPDATE OPERATION_EXCEPTION SET
+        STATUS = 'CLOSE',
+        GOODS_VALUE = #{goodsValue, jdbcType=DECIMAL},
+        COMPENSATION_TO_CUSTOMER = #{compensationToCustomer, jdbcType=DECIMAL},
+        INSURANCE = #{insurance, jdbcType=DECIMAL},
+        DAMAGE = #{damage, jdbcType=DECIMAL}
+        WHERE code = #{code,jdbcType=VARCHAR}
+    </update>
+
+    <select id="get" parameterType="string" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM OPERATION_EXCEPTION WHERE ID = #{id,jdbcType=VARCHAR}
+    </select>
+
+    <select id="getByCode" parameterType="string" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM OPERATION_EXCEPTION WHERE CODE = #{code,jdbcType=VARCHAR}
+    </select>
+
+    <select id="findByOrderNo" parameterType="string" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM OPERATION_EXCEPTION WHERE ORDER_NO = #{orderNo,jdbcType=VARCHAR}
+    </select>
+
+    <select id="pageList" parameterType="map" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM OPERATION_EXCEPTION
+        <where>
+            <if test="branchCode != null">
+                CODE LIKE CONCAT('%',CONCAT(#{code,jdbcType=VARCHAR}, '%'))
+            </if>
+            <if test="siteCode != null">
+                AND ORDER_NO LIKE CONCAT('%', CONCAT(#{orderNo,jdbcType=VARCHAR}, '%'))
+            </if>
+            <if test="typeCode != null">
+                AND TYPE = #{typeCode,jdbcType=VARCHAR}
+            </if>
+            <if test="status != null">
+                AND STATUS = #{status,jdbcType=VARCHAR}
+            </if>
+        </where>
+        <if test="orderBy != null">
+            ORDER BY ${orderBy},OCCUR_TIME DESC
+        </if>
+        <if test="orderBy == null">
+            ORDER BY OCCUR_TIME DESC
+        </if>
+    </select>
+
+    <select id="getExceptionCode" resultType="string">
+        SELECT exception_code.nextval FROM DUAL
+    </select>
+</mapper>

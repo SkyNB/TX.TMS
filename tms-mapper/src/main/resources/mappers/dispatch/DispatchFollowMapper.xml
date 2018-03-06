@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lnet.tms.mapper.DispatchFollowMapper" >
+  <resultMap id="BaseResultMap" type="com.lnet.model.tms.dispatch.dispatchEntity.DispatchFollow" >
+    <id column="DISPATCH_FOLLOW_ID" property="dispatchFollowId" jdbcType="VARCHAR" />
+    <result column="DISPATCH_ID" property="dispatchId" jdbcType="VARCHAR" />
+    <result column="FOLLOW_USER_ID" property="followUserId" jdbcType="VARCHAR" />
+    <!--<result column="FOLLOW_USER_NAME" property="followUserName" jdbcType="NVARCHAR" />-->
+  </resultMap>
+  <sql id="Base_Column_List" >
+    DISPATCH_FOLLOW_ID, DISPATCH_ID, FOLLOW_USER_ID
+  </sql>
+  <select id="findByDispatchId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from DISPATCH_FOLLOW
+    where DISPATCH_ID = #{dispatchId,jdbcType=VARCHAR}
+  </select>
+    <select id="findByDispatchIds" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from DISPATCH_FOLLOW
+        where DISPATCH_ID in
+        <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+            #{item,jdbcType=VARCHAR}
+        </foreach>
+    </select>
+    <delete id="deleteByDispatchId" parameterType="java.lang.String" >
+    delete from DISPATCH_FOLLOW
+    where DISPATCH_ID = #{dispatchId,jdbcType=VARCHAR}
+  </delete>
+    <insert id="batchInsert" parameterType="java.util.List">
+        insert into DISPATCH_FOLLOW (<include refid="Base_Column_List"/>)
+        (
+        <foreach collection="list" item="item" index="index" separator="union all">
+            select #{item.dispatchFollowId,jdbcType=VARCHAR}, #{item.dispatchId,jdbcType=VARCHAR}, #{item.followUserId,jdbcType=VARCHAR}
+           from dual
+        </foreach>
+        )
+    </insert>
+</mapper>

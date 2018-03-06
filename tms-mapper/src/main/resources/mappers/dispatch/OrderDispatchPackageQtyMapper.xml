@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lnet.tms.mapper.OrderDispatchPackageQtyMapper">
+    <resultMap id="BaseResultMap" type="com.lnet.model.tms.dispatch.dispatchEntity.OrderDispatchPackageQty">
+        <id column="ID" property="id" jdbcType="VARCHAR"/>
+        <result column="ORDER_NO" property="orderNo" jdbcType="VARCHAR"/>
+        <result column="BRANCH_CODE" property="branchCode" jdbcType="VARCHAR"/>
+        <result column="SITE_CODE" property="siteCode" jdbcType="VARCHAR"/>
+        <result column="DISPATCHING_PACKAGE_QTY" property="dispatchingPackageQty" jdbcType="DECIMAL"/>
+        <result column="DISTRIBUTION_IN_PACKAGE_QTY" property="distributionInPackageQty" jdbcType="DECIMAL"/>
+        <result column="COLLECTING_PACKAGE_QTY" property="collectingPackageQty" jdbcType="DECIMAL"/>
+        <result column="COLLECTED_PACKAGE_QTY" property="collectedPackageQty" jdbcType="DECIMAL"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    ID, ORDER_NO, BRANCH_CODE, SITE_CODE, DISPATCHING_PACKAGE_QTY, DISTRIBUTION_IN_PACKAGE_QTY,
+    COLLECTING_PACKAGE_QTY, COLLECTED_PACKAGE_QTY
+  </sql>
+    <update id="batchUpdate" parameterType="java.util.List">
+        <foreach collection="list" item="item" index="index" open="begin" close=";end;" separator=";">
+            update ORDER_DISPATCH_PACKAGE_QTY
+            set DISPATCHING_PACKAGE_QTY = #{item.dispatchingPackageQty,jdbcType=DECIMAL},
+            DISTRIBUTION_IN_PACKAGE_QTY = #{item.distributionInPackageQty,jdbcType=DECIMAL},
+            COLLECTING_PACKAGE_QTY = #{item.collectingPackageQty,jdbcType=DECIMAL},
+            COLLECTED_PACKAGE_QTY = #{item.collectedPackageQty,jdbcType=DECIMAL}
+            where SITE_CODE = #{item.siteCode,jdbcType=VARCHAR} and
+            ORDER_NO = #{item.orderNo,jdbcType=VARCHAR}
+        </foreach>
+    </update>
+    <insert id="insert" parameterType="com.lnet.model.tms.dispatch.dispatchEntity.OrderDispatchPackageQty">
+    insert into ORDER_DISPATCH_PACKAGE_QTY (ID, ORDER_NO,
+      BRANCH_CODE, SITE_CODE, DISPATCHING_PACKAGE_QTY, 
+      DISTRIBUTION_IN_PACKAGE_QTY, COLLECTING_PACKAGE_QTY, 
+      COLLECTED_PACKAGE_QTY)
+    values (#{id,jdbcType=VARCHAR}, #{orderNo,jdbcType=VARCHAR},
+      #{branchCode,jdbcType=VARCHAR}, #{siteCode,jdbcType=VARCHAR}, #{dispatchingPackageQty,jdbcType=DECIMAL}, 
+      #{distributionInPackageQty,jdbcType=DECIMAL}, #{collectingPackageQty,jdbcType=DECIMAL}, 
+      #{collectedPackageQty,jdbcType=DECIMAL})
+  </insert>
+    <insert id="batchInsert" parameterType="java.util.List">
+        insert into ORDER_DISPATCH_PACKAGE_QTY (<include refid="Base_Column_List"/>)
+        (
+        <foreach collection="list" item="item" index="index" separator="union all">
+            select #{item.id,jdbcType=VARCHAR}, #{item.orderNo,jdbcType=VARCHAR},
+            #{item.branchCode,jdbcType=VARCHAR}, #{item.siteCode,jdbcType=VARCHAR},
+            #{item.dispatchingPackageQty,jdbcType=DECIMAL},
+            #{item.distributionInPackageQty,jdbcType=DECIMAL}, #{item.collectingPackageQty,jdbcType=DECIMAL},
+            #{item.collectedPackageQty,jdbcType=DECIMAL} from dual
+        </foreach>
+        )
+    </insert>
+    <update id="batchUpdateDispatchingQty" parameterType="java.util.List">
+        <foreach collection="list" item="item" index="index" open="begin" close=";end;" separator=";">
+            update ORDER_DISPATCH_PACKAGE_QTY
+            set DISPATCHING_PACKAGE_QTY = #{item.dispatchingPackageQty,jdbcType=DECIMAL}
+            where SITE_CODE = #{item.siteCode,jdbcType=VARCHAR} and
+            ORDER_NO = #{item.orderNo,jdbcType=VARCHAR}
+        </foreach>
+    </update>
+    <update id="batchUpdateDistributionInQty" parameterType="java.util.List">
+        <foreach collection="list" item="item" index="index" open="begin" close=";end;" separator=";">
+            update ORDER_DISPATCH_PACKAGE_QTY
+            set DISTRIBUTION_IN_PACKAGE_QTY = #{item.distributionInPackageQty,jdbcType=DECIMAL}
+            where SITE_CODE = #{item.siteCode,jdbcType=VARCHAR} and
+            ORDER_NO = #{item.orderNo,jdbcType=VARCHAR}
+        </foreach>
+    </update>
+    <update id="batchUpdateCollectingQty" parameterType="java.util.List">
+        <foreach collection="list" item="item" index="index" open="begin" close=";end;" separator=";">
+            update ORDER_DISPATCH_PACKAGE_QTY
+            set COLLECTING_PACKAGE_QTY = #{item.collectingPackageQty,jdbcType=DECIMAL}
+            where SITE_CODE = #{item.siteCode,jdbcType=VARCHAR} and
+            ORDER_NO = #{item.orderNo,jdbcType=VARCHAR}
+        </foreach>
+    </update>
+    <update id="batchUpdateCollectedQty" parameterType="java.util.List">
+        <foreach collection="list" item="item" index="index" open="begin" close=";end;" separator=";">
+            update ORDER_DISPATCH_PACKAGE_QTY
+            set COLLECTED_PACKAGE_QTY = #{item.collectedPackageQty,jdbcType=DECIMAL}
+            where SITE_CODE = #{item.siteCode,jdbcType=VARCHAR} and
+            ORDER_NO = #{item.orderNo,jdbcType=VARCHAR}
+        </foreach>
+    </update>
+    <select id="findByOrderNos" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from ORDER_DISPATCH_PACKAGE_QTY
+        where SITE_CODE = #{siteCode,jdbcType=VARCHAR} and ORDER_NO IN
+        <foreach collection="orderNos" open="(" close=")" separator="," index="index" item="orderNo">
+            #{orderNo,jdbcType=NVARCHAR}
+        </foreach>
+    </select>
+</mapper>

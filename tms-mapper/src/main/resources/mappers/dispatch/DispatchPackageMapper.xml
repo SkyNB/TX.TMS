@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lnet.tms.mapper.DispatchPackageMapper" >
+  <resultMap id="BaseResultMap" type="com.lnet.model.tms.dispatch.dispatchEntity.DispatchPackage" >
+    <id column="DISPATCH_PACKAGE_ID" property="dispatchPackageId" jdbcType="VARCHAR" />
+    <result column="DISPATCH_ID" property="dispatchId" jdbcType="VARCHAR" />
+    <result column="ORDER_NO" property="orderNo" jdbcType="VARCHAR" />
+    <result column="PACKAGE_NO" property="packageNo" jdbcType="VARCHAR" />
+    <result column="VOLUME" property="volume" jdbcType="DECIMAL" />
+    <result column="WEIGHT" property="weight" jdbcType="DECIMAL" />
+    <result column="GOODS_DESC" property="goodsDesc" jdbcType="NVARCHAR" />
+    <result column="IS_LOADED" property="isLoaded" jdbcType="DECIMAL" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    DISPATCH_PACKAGE_ID, DISPATCH_ID, ORDER_NO, PACKAGE_NO, VOLUME, WEIGHT, GOODS_DESC, 
+    IS_LOADED
+  </sql>
+  <insert id="insert" parameterType="com.lnet.model.tms.dispatch.dispatchEntity.DispatchPackage" >
+    insert into DISPATCH_PACKAGE (DISPATCH_PACKAGE_ID, DISPATCH_ID, ORDER_NO, 
+      PACKAGE_NO, VOLUME, WEIGHT, 
+      GOODS_DESC, IS_LOADED)
+    values (#{dispatchPackageId,jdbcType=VARCHAR}, #{dispatchId,jdbcType=VARCHAR}, #{orderNo,jdbcType=VARCHAR}, 
+      #{packageNo,jdbcType=VARCHAR}, #{volume,jdbcType=DECIMAL}, #{weight,jdbcType=DECIMAL}, 
+      #{goodsDesc,jdbcType=NVARCHAR}, #{isLoaded,jdbcType=DECIMAL})
+  </insert>
+    <insert id="batchInsert" parameterType="java.util.List">
+        insert into DISPATCH_PACKAGE (<include refid="Base_Column_List"/>)
+        (
+        <foreach collection="list" item="item" index="index" separator="union all">
+            select #{item.dispatchPackageId,jdbcType=VARCHAR}, #{item.dispatchId,jdbcType=VARCHAR}, #{item.orderNo,jdbcType=VARCHAR},
+            #{item.packageNo,jdbcType=VARCHAR}, #{item.volume,jdbcType=DECIMAL}, #{item.weight,jdbcType=DECIMAL},
+            #{item.goodsDesc,jdbcType=VARCHAR}, #{item.isLoaded,jdbcType=DECIMAL} from dual
+        </foreach>
+        )
+    </insert>
+  <update id="update" parameterType="com.lnet.model.tms.dispatch.dispatchEntity.DispatchPackage" >
+    update DISPATCH_PACKAGE
+    set DISPATCH_ID = #{dispatchId,jdbcType=VARCHAR},
+      ORDER_NO = #{orderNo,jdbcType=VARCHAR},
+      PACKAGE_NO = #{packageNo,jdbcType=VARCHAR},
+      VOLUME = #{volume,jdbcType=DECIMAL},
+      WEIGHT = #{weight,jdbcType=DECIMAL},
+      GOODS_DESC = #{goodsDesc,jdbcType=NVARCHAR},
+      IS_LOADED = #{isLoaded,jdbcType=DECIMAL}
+    where DISPATCH_PACKAGE_ID = #{dispatchPackageId,jdbcType=VARCHAR}
+  </update>
+    <select id="findByDispatchId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select
+        <include refid="Base_Column_List" />
+        from DISPATCH_PACKAGE
+        where DISPATCH_ID = #{dispatchId,jdbcType=VARCHAR}
+    </select>
+    <delete id="delete" parameterType="java.lang.String" >
+        delete from DISPATCH_PACKAGE
+        where DISPATCH_PACKAGE_ID = #{dispatchPackageId,jdbcType=VARCHAR}
+    </delete>
+    <delete id="deleteByDispatchId" parameterType="java.lang.String" >
+        delete from DISPATCH_PACKAGE
+        where DISPATCH_ID = #{dispatchId,jdbcType=VARCHAR}
+    </delete>
+    <delete id="batchDelete" parameterType="java.util.List">
+        delete from DISPATCH_PACKAGE
+        where DISPATCH_PACKAGE_ID in
+        <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+            #{item,jdbcType=NVARCHAR}
+        </foreach>
+    </delete>
+    <update id="batchUpdate" parameterType="java.util.List" >
+        <foreach collection="list" item="item" index="index" open="begin" close=";end;" separator=";">
+            update DISPATCH_PACKAGE
+            set DISPATCH_ID = #{item.dispatchId,jdbcType=VARCHAR},
+            ORDER_NO = #{item.orderNo,jdbcType=VARCHAR},
+            PACKAGE_NO = #{item.packageNo,jdbcType=VARCHAR},
+            VOLUME = #{item.volume,jdbcType=DECIMAL},
+            WEIGHT = #{item.weight,jdbcType=DECIMAL},
+            GOODS_DESC = #{item.goodsDesc,jdbcType=NVARCHAR},
+            IS_LOADED = #{item.isLoaded,jdbcType=DECIMAL}
+            where DISPATCH_PACKAGE_ID = #{item.dispatchPackageId,jdbcType=VARCHAR}
+        </foreach>
+    </update>
+</mapper>

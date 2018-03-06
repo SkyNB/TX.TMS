@@ -1,0 +1,409 @@
+/* KENDO UI FIX START */
+/*.form-control, !* if this class is applied to a Kendo UI widget, its layout may change *!*/
+.container,
+.container-fluid,
+.row,
+.col-xs-1, .col-sm-1, .col-md-1, .col-lg-1,
+.col-xs-2, .col-sm-2, .col-md-2, .col-lg-2,
+.col-xs-3, .col-sm-3, .col-md-3, .col-lg-3,
+.col-xs-4, .col-sm-4, .col-md-4, .col-lg-4,
+.col-xs-5, .col-sm-5, .col-md-5, .col-lg-5,
+.col-xs-6, .col-sm-6, .col-md-6, .col-lg-6,
+.col-xs-7, .col-sm-7, .col-md-7, .col-lg-7,
+.col-xs-8, .col-sm-8, .col-md-8, .col-lg-8,
+.col-xs-9, .col-sm-9, .col-md-9, .col-lg-9,
+.col-xs-10, .col-sm-10, .col-md-10, .col-lg-10,
+.col-xs-11, .col-sm-11, .col-md-11, .col-lg-11,
+.col-xs-12, .col-sm-12, .col-md-12, .col-lg-12 {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    padding-left: 0px;
+}
+
+/**, :before, :after
+{
+    -webkit-box-sizing: content-box;
+    -moz-box-sizing: content-box;
+    box-sizing: content-box;
+}*/
+
+.page-header {
+    border-bottom: 1px solid #dbdbdb;
+    background: #fff;
+}
+
+.k-state-selected a {
+    color: #fff;
+}
+
+.k-grid-content tr:hover a {
+    color: #fff;
+}
+.k-grid-content tr:hover .popover-content>a {
+    color: #337ab7;
+}
+.k-grid td {
+    white-space: nowrap;
+}
+
+.k-grid .mouse-over {
+    background-color: #428bca;
+    color: #ffffff;
+}
+
+.k-grid .mouse-over a {
+    color: #ffffff;
+}
+
+.page-header.navbar.navbar-fixed-top {
+    z-index: 1;
+    text-decoration: none;
+    border-bottom: 1px solid #ccc;
+    border-top: 1px solid #fff;
+    background-color: #f8f8f8;
+    background: -webkit-gradient(linear, left top, left bottom, from(#f9f9f9), to(#f2f2f2));
+    background: -webkit-linear-gradient(top, #f9f9f9, #f2f2f2);
+    background: -moz-linear-gradient(top, #f9f9f9, #f2f2f2);
+    background: -ms-linear-gradient(top, #f9f9f9, #f2f2f2);
+    background: -o-linear-gradient(top, #f9f9f9, #f2f2f2);
+    background: linear-gradient(top, #f9f9f9, #f2f2f2);
+    box-shadow: inset 0px 1px 1px #fff;
+
+}
+.slimScrollDiv{
+    background: #eff7ff;
+}
+.nav>li>a:hover{
+    background-color: #428bca !important;
+    color: #fff;
+}
+
+.nav .open > a, .nav .open > a:hover, .nav .open > a:focus {
+    background-color: #fff;
+    border-color: #337ab7;
+    color: #ff6600;
+}
+.top-menu .navbar-nav > li > a {
+    padding-bottom: 19px;
+    padding-top: 19px;
+}
+
+.form-inline .form-group {
+    margin-right: 20px;
+    margin-bottom: 5px
+}
+
+.close {
+    display: inline-block;
+    margin-top: 0;
+    margin-right: 0;
+    width: 9px;
+    height: 9px;
+    background-repeat: no-repeat !important;
+    text-indent: -10000px;
+    outline: 0;
+    background-image: url(../global/kendoui/styles/images/remove-icon-small.png) !important;
+}
+
+.action-bar {
+    border-bottom:1px solid #cccccc ;
+    padding: 5px 0px;
+}
+
+.search-bar {
+    margin: 5px 0;
+}
+
+/*validate*/
+.required {
+    color: #e73d4a;
+}
+/*modal*/
+.modal-header{
+    background: rgba(0, 0, 0, 0) -moz-linear-gradient(center top , #f8f8f8, #f2f2f2) repeat scroll 0 0;
+    border-bottom: 1px solid #ccc;
+    border-top: 1px solid #fff;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+    color: #666;
+    font-size: 13px;
+    font-weight: bold;
+    padding: 8px 15px;
+    text-shadow: 0 1px #fff;
+}
+.modal-footer{
+    background: rgba(0, 0, 0, 0) -moz-linear-gradient(center top , #f8f8f8, #f2f2f2) repeat scroll 0 0;
+    border-bottom: 1px solid #fff;
+    border-bottom-left-radius: 3px;
+    border-bottom-right-radius: 3px;
+    border-top: 1px solid #ccc;
+    box-shadow: 0 1px 1px #fff inset;
+    color: #555;
+    font-size: 12px;
+    padding: 8px 15px;
+    text-shadow: 0 1px #fff;
+}
+.modal-body{
+    max-height: 600px;
+    overflow: auto;
+}
+
+.has-error .help-block, .has-error .control-label, .has-error .radio, .has-error .checkbox, .has-error .radio-inline, .has-error .checkbox-inline {
+    color: #e73d4a;
+}
+
+.error {
+    color: #e73d4a;
+}
+
+.k-tooltip {
+    position: fixed;
+}
+
+div.k-ext-treeview {
+    max-height: 200px;
+    width: 12.3em;
+}
+
+.modal-footer button, .modal-footer a {
+    margin-left: 20px;
+}
+
+/*form-layout*/
+.col-sm-12 .k-autocomplete, .col-sm-12 .k-combobox, .col-sm-12 .k-datepicker, .col-sm-12 .k-timepicker,
+.col-sm-12 .k-datetimepicker, .col-sm-12 .k-colorpicker, .col-sm-12 .k-numerictextbox, .col-sm-12 .k-dropdown,
+.col-sm-12 .k-selectbox, .col-sm-12 .k-textbox, .col-sm-12 .k-toolbar .col-sm-12 .k-split-button {
+    width: 43em;
+    display: inline-block;
+    overflow: visible;
+    position: relative;
+    vertical-align: middle;
+}
+
+.col-sm-12 .col-sm-4 {
+    width: 16.67%;
+}
+
+ul.typeahead {
+    height: 300px;
+    overflow: scroll;
+}
+
+.tt-input {
+    width: 14.4em;
+}
+
+.tt-menu {
+    min-width: 0px;
+    width: 14.4em;
+}
+
+.tt-suggestion:hover {
+    color: #FFF;
+    background: #428bca;
+}
+
+.tt-cursor {
+    color: #FFF;
+    background: #428bca;
+}
+
+.selected-data .label {
+    margin: 2px 10px 2px 0;
+    line-height: 20px;
+    display: inline-block;
+}
+
+.k-grid tr:hover .k-button, .k-grid td.k-state-selected:hover .k-button {
+    background: #428bca;
+}
+
+.selected-data .fa {
+    cursor: pointer;
+}
+
+.table-scrollable {
+    /*width: 100%;*/
+    overflow-x: auto;
+    overflow-y: hidden;
+    border: 1px solid #e7ecf1;
+    margin: 10px 0 !important;
+}
+
+.table-scrollable > .table {
+    width: 100% !important;
+    margin: 0 !important;
+    background-color: #fff;
+}
+
+.dropdown-menu > li > a > .badge {
+    position: absolute;
+    margin-top: 1px;
+    right: 3px;
+    display: inline;
+}
+/*.page-header.navbar .top-menu .navbar-nav li .subject {
+    display: block;
+    margin-left: 26px;
+}*/
+.page-header.navbar .top-menu .navbar-nav li .subject .from {
+    font-size: 13px;
+    font-weight: 600;
+    color: #5b9bd1;
+}
+.page-header.navbar .top-menu .navbar-nav li .subject .time {
+    font-size: 12px;
+    font-weight: 400;
+    opacity: .5;
+    filter: alpha(opacity=50);
+    float: right;
+}
+.page-header.navbar .top-menu .navbar-nav  li .message {
+    display: block !important;
+    font-size: 12px;
+    line-height: 1.3;
+    margin-left: 26px;
+}
+
+
+.badge-danger {
+    background-color: #ed6b75;
+}
+
+.badge-info {
+    background-color: #659be0;
+}
+
+.badge-warning {
+    background-color: #F1C40F;
+}
+
+.badge-default {
+    background-color: #36c6d3;
+}
+
+.bold {
+    font-weight: 700 !important;
+}
+
+.badge {
+    font-size: 11px !important;
+    font-weight: 300;
+    height: 18px;
+    color: #fff;
+    padding: 3px 6px;
+    -webkit-border-radius: 12px !important;
+    -moz-border-radius: 12px !important;
+    border-radius: 12px !important;
+    text-shadow: none !important;
+    text-align: center;
+}
+
+.badge-danger, .badge-default, .badge-info, .badge-primary, .badge-success, .badge-warning, .btn.white.active:not(.btn-outline), .btn.white:active:not(.btn-outline), .open > .btn.white.dropdown-toggle:not(.btn-outline) {
+    background-image: none;
+}
+
+.badge, .input-inline {
+    vertical-align: middle;
+}
+.pager li > a, .pager li > span{
+    border-radius: 0px;
+}
+.pager li > a:hover, .pager li > a:focus {
+    text-decoration: none;
+}
+.k-primary, .k-overflow-container .k-primary {
+    color: #fff;
+}
+
+table.dataTable.no-footer {
+    border-bottom-color: #e7ecf1;
+}
+table.table-bordered.dataTable {
+    border-collapse: separate !important;
+}
+table.dataTable.no-footer {
+    border-bottom: 1px solid #111;
+}
+.table-scrollable > .table {
+    width: 100% !important;
+    margin: 0 !important;
+    background-color: #fff;
+}
+
+.table-scrollable > .table-bordered > tbody > tr > td:first-child, .table-scrollable > .table-bordered > tbody > tr > th:first-child, .table-scrollable > .table-bordered > tfoot > tr > td:first-child, .table-scrollable > .table-bordered > tfoot > tr > th:first-child, .table-scrollable > .table-bordered > thead > tr > td:first-child, .table-scrollable > .table-bordered > thead > tr > th:first-child {
+    border-left: 0;
+}
+table.table-bordered.dataTable tbody th, table.table-bordered.dataTable tbody td {
+    border-bottom-width: 0;
+}
+table.dataTable td.sorting_1, table.dataTable td.sorting_2, table.dataTable td.sorting_3, table.dataTable th.sorting_1, table.dataTable th.sorting_2, table.dataTable th.sorting_3 {
+    background: #fbfcfd !important;
+}
+table.table-bordered.dataTable th, table.table-bordered.dataTable td {
+    border-left-width: 0;
+}
+/*table.dataTable tbody th, table.dataTable tbody td {
+    padding: 8px 10px;
+}*/
+.table-bordered, .table-bordered > tbody > tr > td, .table-bordered > tbody > tr > th, .table-bordered > tfoot > tr > td, .table-bordered > tfoot > tr > th, .table-bordered > thead > tr > td, .table-bordered > thead > tr > th {
+    border: 1px solid #e7ecf1;
+    white-space: nowrap;
+}
+
+
+.modal-body .k-grid{
+    width: 96%;
+    margin:0 auto ;
+}
+
+.form-inline .control-label{
+    line-height: 30px;
+    width:70px;
+    text-align: right;
+}
+
+.modal .tab-content > .active {
+    padding-top: 10px;
+}
+.modal{
+    overflow-y: auto;
+}
+table .k-autocomplete, table .k-combobox, table .k-datepicker, table .k-timepicker,
+table .k-datetimepicker, table .k-colorpicker, table .k-numerictextbox, table .k-dropdown,
+table .k-selectbox, table .k-textbox{
+    display: inline-block;
+    overflow: visible;
+    position: relative;
+    vertical-align: middle;
+    border-width: 0;
+    width: 10em;
+}
+.data-popover-content{
+    display: none;
+}
+.popover-content{
+    color: #000;
+}
+
+table.table .k-textbox{
+    border:1px solid #DBDBDB;
+}
+.headgrid{
+    background: #f40;
+    margin-top: 10px ;
+    background-color: #13a3e6;
+  background-image: linear-gradient(to bottom, #13a3e6, #5ac0f1);
+    border: 1px solid #dbdbdb;
+    border-bottom: none;
+    color: #fff;
+    font-size:16px;
+    font-weight: 600;
+    padding: 4px 0px;
+    vertical-align: middle;
+}
+.control-label{
+    text-align: right;
+
+}

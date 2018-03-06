@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lnet.tms.mapper.DeliveryOrderTraceMapper">
+    <resultMap id="BaseResultMap" type="DeliveryOrderTrace">
+        <id column="TRACING_ID" property="tracingId" jdbcType="VARCHAR"/>
+        <result column="SHIPPER" property="shipper" jdbcType="VARCHAR"/>
+        <result column="DELIVERY_NO" property="deliveryNo" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <resultMap id="multiResultMap" type="com.lnet.model.tms.delivery.DeliveryOrderTraceListModel">
+        <id column="TRACING_ID" property="tracingId" jdbcType="VARCHAR"/>
+        <result column="SHIPPER" property="shipper" jdbcType="VARCHAR"/>
+        <result column="DELIVERY_NO" property="deliveryNo" jdbcType="VARCHAR"/>
+        <collection property="items" ofType="DeliveryOrderTraceItem">
+            <id column="ITEM_ID" property="itemId" jdbcType="VARCHAR"/>
+            <result column="I_TRACING_ID" property="tracingId" jdbcType="VARCHAR"/>
+            <result column="OPERATOR" property="operator" jdbcType="NVARCHAR"/>
+            <result column="OPERATE_TIME" property="operateTime" jdbcType="TIMESTAMP"/>
+            <result column="OPERATE_ADDRESS" property="operateAddress" jdbcType="VARCHAR"/>
+            <result column="DESCRIPTION" property="description" jdbcType="VARCHAR"/>
+            <result column="TRACING_TIME" property="tracingTime" jdbcType="TIMESTAMP"/>
+        </collection>
+    </resultMap>
+
+    <sql id="BaseColumn">
+        TRACING_ID, SHIPPER, DELIVERY_NO
+    </sql>
+
+    <insert id="insert" parameterType="com.lnet.model.tms.delivery.DeliveryOrderTrace">
+        INSERT INTO DELIVERY_ORDER_TRACE(
+        <include refid="BaseColumn"/>)
+        VALUES (
+        #{tracingId,jdbcType=VARCHAR},
+        #{shipper,jdbcType=VARCHAR},
+        #{deliveryNo,jdbcType=VARCHAR}
+        )
+    </insert>
+
+    <select id="getByDeliveryNoAndShipper" resultMap = "BaseResultMap">
+        SELECT <include refid="BaseColumn"/>
+        FROM DELIVERY_ORDER_TRACE WHERE DELIVERY_NO = #{deliveryNo,jdbcType=VARCHAR} AND SHIPPER = #{shipper,jdbcType=VARCHAR}
+    </select>
+
+    <select id="findByDeliveryNos" resultMap="BaseResultMap">
+        SELECT <include refid="BaseColumn"/>
+        FROM DELIVERY_ORDER_TRACE WHERE DELIVERY_NO IN
+        <foreach collection="list" item="item" index="index" open="(" close=")" separator=",">
+            #{item,jdbcType=VARCHAR}
+        </foreach>
+    </select>
+</mapper>

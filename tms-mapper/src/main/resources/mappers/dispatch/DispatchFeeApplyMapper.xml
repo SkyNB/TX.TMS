@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lnet.tms.mapper.DispatchFeeApplyMapper">
+    <resultMap id="BaseResultMap" type="com.lnet.model.tms.dispatch.dispatchEntity.DispatchFeeApply">
+        <id column="FEE_APPLY_ID" property="feeApplyId" jdbcType="VARCHAR"/>
+        <result column="DISPATCH_NUMBER" property="dispatchNumber" jdbcType="VARCHAR"/>
+        <result column="DRIVER" property="driver" jdbcType="NVARCHAR"/>
+        <result column="VEHICLE_NO" property="vehicleNo" jdbcType="NVARCHAR"/>
+        <result column="BRANCH_CODE" property="branchCode" jdbcType="VARCHAR"/>
+        <result column="SITE_CODE" property="siteCode" jdbcType="VARCHAR"/>
+        <result column="APPLY_TOTAL_AMOUNT" property="applyTotalAmount" jdbcType="DECIMAL"/>
+        <result column="APPLY_USER_ID" property="applyUserId" jdbcType="VARCHAR"/>
+        <result column="APPLY_TIME" property="applyTime" jdbcType="TIMESTAMP"/>
+        <result column="APPLY_REMARK" property="applyRemark" jdbcType="NVARCHAR"/>
+        <result column="APPROVE_TOTAL_AMOUNT" property="approveTotalAmount" jdbcType="DECIMAL"/>
+        <result column="APPROVE_USER_ID" property="approveUserId" jdbcType="VARCHAR"/>
+        <result column="APPROVE_TIME" property="approveTime" jdbcType="TIMESTAMP"/>
+        <result column="APPROVE_REMARK" property="approveRemark" jdbcType="NVARCHAR"/>
+        <result column="IS_APPROVE" property="isApprove" jdbcType="DECIMAL"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    FEE_APPLY_ID, DISPATCH_NUMBER, DRIVER, VEHICLE_NO, BRANCH_CODE, SITE_CODE, APPLY_TOTAL_AMOUNT, 
+    APPLY_USER_ID, APPLY_TIME, APPLY_REMARK, APPROVE_TOTAL_AMOUNT, APPROVE_USER_ID, APPROVE_TIME, 
+    APPROVE_REMARK, IS_APPROVE
+  </sql>
+    <select id="get" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from DISPATCH_FEE_APPLY
+        where FEE_APPLY_ID = #{feeApplyId,jdbcType=VARCHAR}
+    </select>
+    <insert id="insert" parameterType="com.lnet.model.tms.dispatch.dispatchEntity.DispatchFeeApply">
+    insert into DISPATCH_FEE_APPLY (FEE_APPLY_ID, DISPATCH_NUMBER, DRIVER, 
+      VEHICLE_NO, BRANCH_CODE, SITE_CODE, 
+      APPLY_TOTAL_AMOUNT, APPLY_USER_ID, APPLY_TIME, 
+      APPLY_REMARK, APPROVE_TOTAL_AMOUNT, APPROVE_USER_ID, 
+      APPROVE_TIME, APPROVE_REMARK, IS_APPROVE
+      )
+    values (#{feeApplyId,jdbcType=VARCHAR}, #{dispatchNumber,jdbcType=VARCHAR}, #{driver,jdbcType=NVARCHAR}, 
+      #{vehicleNo,jdbcType=NVARCHAR}, #{branchCode,jdbcType=VARCHAR}, #{siteCode,jdbcType=VARCHAR}, 
+      #{applyTotalAmount,jdbcType=DECIMAL}, #{applyUserId,jdbcType=VARCHAR}, #{applyTime,jdbcType=TIMESTAMP}, 
+      #{applyRemark,jdbcType=NVARCHAR}, #{approveTotalAmount,jdbcType=DECIMAL}, #{approveUserId,jdbcType=VARCHAR}, 
+      #{approveTime,jdbcType=TIMESTAMP}, #{approveRemark,jdbcType=NVARCHAR}, #{isApprove,jdbcType=DECIMAL}
+      )
+  </insert>
+    <update id="update" parameterType="com.lnet.model.tms.dispatch.dispatchEntity.DispatchFeeApply">
+    update DISPATCH_FEE_APPLY
+    set DISPATCH_NUMBER = #{dispatchNumber,jdbcType=VARCHAR},
+      DRIVER = #{driver,jdbcType=NVARCHAR},
+      VEHICLE_NO = #{vehicleNo,jdbcType=NVARCHAR},
+      BRANCH_CODE = #{branchCode,jdbcType=VARCHAR},
+      SITE_CODE = #{siteCode,jdbcType=VARCHAR},
+      APPLY_TOTAL_AMOUNT = #{applyTotalAmount,jdbcType=DECIMAL},
+      APPLY_USER_ID = #{applyUserId,jdbcType=VARCHAR},
+      APPLY_TIME = #{applyTime,jdbcType=TIMESTAMP},
+      APPLY_REMARK = #{applyRemark,jdbcType=NVARCHAR},
+      APPROVE_TOTAL_AMOUNT = #{approveTotalAmount,jdbcType=DECIMAL},
+      APPROVE_USER_ID = #{approveUserId,jdbcType=VARCHAR},
+      APPROVE_TIME = #{approveTime,jdbcType=TIMESTAMP},
+      APPROVE_REMARK = #{approveRemark,jdbcType=NVARCHAR},
+      IS_APPROVE = #{isApprove,jdbcType=DECIMAL}
+    where FEE_APPLY_ID = #{feeApplyId,jdbcType=VARCHAR}
+  </update>
+    <select id="pageList" resultType="com.lnet.model.tms.dispatch.dispatchEntity.DispatchFeeApply">
+        select
+        <include refid="Base_Column_List"/>
+        from DISPATCH_FEE_APPLY
+        <where>
+            <if test="dispatchNumber != null ">
+                DISPATCH_NUMBER like CONCAT(CONCAT('%', #{dispatchNumber}), '%')
+            </if>
+            <if test="driver != null ">
+                AND DRIVER like CONCAT(CONCAT('%', #{driver}), '%')
+            </if>
+            <if test="vehicleNo != null ">
+                AND VEHICLE_NO like CONCAT(CONCAT('%', #{vehicleNo}), '%')
+            </if>
+            <if test="branchCode != null ">
+                AND BRANCH_CODE = #{branchCode,jdbcType=NVARCHAR}
+            </if>
+            <if test="siteCode != null ">
+                AND SITE_CODE = #{siteCode,jdbcType=NVARCHAR}
+            </if>
+            <if test="isApprove !=null ">
+                AND IS_APPROVE = #{isApprove,jdbcType=DECIMAL}
+            </if>
+        </where>
+        <if test="orderBy !=null">
+            order by ${orderBy}
+        </if>
+        <if test="orderBy ==null">
+            order by APPLY_TIME desc
+        </if>
+    </select>
+    <select id="searchFeeApplies" resultType="com.lnet.model.tms.dispatch.dispatchEntity.DispatchFeeApply">
+        SELECT * FROM DISPATCH_FEE_APPLY
+        <where>
+            <if test="siteCode!=null">
+                SITE_CODE = #{siteCode,jdbcType=NVARCHAR}
+            </if>
+            <if test="applyUserId!=null">
+                and APPLY_USER_ID = #{applyUserId,jdbcType=NVARCHAR}
+            </if>
+            <if test="applyDate!=null">
+                and TRUNC(APPLY_TIME) <![CDATA[ >=]]> TO_DATE(#{applyDate,jdbcType=NVARCHAR},'YYYY-MM-dd')
+            </if>
+        </where>
+    </select>
+</mapper>

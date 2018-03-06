@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lnet.tms.mapper.DeliveryOrderTraceItemMapper">
+
+    <sql id="BaseColumn">
+        ITEM_ID, TRACING_ID, OPERATOR, OPERATE_TIME, OPERATE_ADDRESS, DESCRIPTION, TRACING_TIME
+    </sql>
+
+    <resultMap id="BaseResultMap" type="com.lnet.model.tms.delivery.DeliveryOrderTraceItem">
+        <id column="ITEM_ID" property="itemId" jdbcType="VARCHAR"/>
+        <result column="TRACING_ID" property="tracingId" jdbcType="VARCHAR"/>
+        <result column="OPERATOR" property="operator" jdbcType="NVARCHAR"/>
+        <result column="OPERATE_TIME" property="operateTime" jdbcType="TIMESTAMP"/>
+        <result column="OPERATE_ADDRESS" property="operateAddress" jdbcType="NVARCHAR"/>
+        <result column="DESCRIPTION" property="description" jdbcType="NVARCHAR"/>
+        <result column="TRACING_TIME" property="tracingTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <insert id="insert" parameterType="com.lnet.model.tms.delivery.DeliveryOrderTraceItem">
+        INSERT INTO DELIVERY_ORDER_TRACE_ITEM
+        (<include refid="BaseColumn"/>)
+        VALUES(
+        #{itemId,jdbcType=VARCHAR},
+        #{tracingId,jdbcType=VARCHAR},
+        #{operator,jdbcType=NVARCHAR},
+        #{operateTime,jdbcType=TIMESTAMP},
+        #{operateAddress,jdbcType=NVARCHAR},
+        #{description,jdbcType=NVARCHAR},
+        #{tracingTime,jdbcType=TIMESTAMP}
+        )
+    </insert>
+
+    <insert id="batchInsert" parameterType="com.lnet.model.tms.delivery.DeliveryOrderTraceItem">
+        INSERT INTO DELIVERY_ORDER_TRACE_ITEM(<include refid="BaseColumn"/>)
+        <foreach collection="list" item="item" index="index" open="(" close=")" separator="UNION ALL">
+            SELECT
+            #{item.itemId,jdbcType=VARCHAR},
+            #{item.tracingId,jdbcType=VARCHAR},
+            #{item.operator,jdbcType=NVARCHAR},
+            #{item.operateTime,jdbcType=TIMESTAMP},
+            #{item.operateAddress,jdbcType=NVARCHAR},
+            #{item.description,jdbcType=NVARCHAR},
+            #{item.tracingTime,jdbcType=TIMESTAMP}
+            FROM DUAL
+        </foreach>
+    </insert>
+
+    <select id="getByDeliveryNoAndShipper" parameterType="string" resultMap="BaseResultMap">
+        SELECT
+        i.ITEM_ID,
+        i.TRACING_ID,
+        i.OPERATOR,
+        i.OPERATE_TIME,
+        i.OPERATE_ADDRESS,
+        i.DESCRIPTION,
+        i.TRACING_TIME FROM DELIVERY_ORDER_TRACE d INNER JOIN DELIVERY_ORDER_TRACE_ITEM i
+        ON d.TRACING_ID = i.TRACING_ID
+        WHERE d.DELIVERY_NO = #{deliveryNo,jdbcType=VARCHAR} AND d.SHIPPER = #{shipper,jdbcType=VARCHAR}
+        ORDER BY i.OPERATE_TIME DESC
+    </select>
+</mapper>

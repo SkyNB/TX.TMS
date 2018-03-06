@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lnet.tms.mapper.GpsInfoMapper">
+    <resultMap id="BaseResultMap" type="com.lnet.model.tms.dispatch.dispatchEntity.GpsInfo">
+        <id column="GPS_ID" property="gpsId" jdbcType="VARCHAR"/>
+        <result column="DISPATCH_NUMBER" property="dispatchNumber" jdbcType="VARCHAR"/>
+        <result column="USER_ID" property="userId" jdbcType="VARCHAR"/>
+        <result column="VEHICLE_NO" property="vehicleNo" jdbcType="VARCHAR"/>
+        <result column="DRIVER" property="driver" jdbcType="VARCHAR"/>
+        <result column="LONGITUDE" property="longitude" jdbcType="DECIMAL"/>
+        <result column="LATITUDE" property="latitude" jdbcType="DECIMAL"/>
+        <result column="DIRECTION" property="direction" jdbcType="DECIMAL"/>
+        <result column="RECEIVE_TIME" property="receiveTime" jdbcType="TIMESTAMP"/>
+        <result column="ADDRESS" property="address" jdbcType="NVARCHAR"/>
+        <result column="REMARK" property="remark" jdbcType="NVARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        GPS_ID, DISPATCH_NUMBER, USER_ID, VEHICLE_NO,DRIVER, LONGITUDE, LATITUDE, DIRECTION, RECEIVE_TIME,
+        ADDRESS, REMARK
+    </sql>
+    <select id="get" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from GPS_INFO
+        where GPS_ID = #{gpsId,jdbcType=VARCHAR}
+    </select>
+    <select id="getLastByUser" resultType="com.lnet.model.tms.dispatch.dispatchEntity.GpsInfo">
+        SELECT * from (select * from GPS_INFO WHERE user_id =#{userId} order by receive_time desc ) t /*GPS_WEEK_INFO*/
+        where rownum=1
+    </select>
+    <select id="findByUser" resultType="com.lnet.model.tms.dispatch.dispatchEntity.GpsInfo">
+        select * from GPS_INFO WHERE user_id =#{userId} order by receive_time desc /*GPS_WEEK_INFO*/
+    </select>
+    <select id="findByDispatchNo" resultType="com.lnet.model.tms.dispatch.dispatchEntity.GpsInfo">
+        select * from GPS_INFO WHERE dispatch_Number =#{dispatchNumber} order by receive_time desc /*GPS_WEEK_INFO*/
+    </select>
+    <select id="findAllByUser" resultType="com.lnet.model.tms.dispatch.dispatchEntity.GpsInfo">
+        select
+        <include refid="Base_Column_List"/>
+        from GPS_INFO WHERE user_id =#{userId} order by receive_time desc
+    </select>
+    <select id="findLastByUsers" resultType="com.lnet.model.tms.dispatch.dispatchEntity.GpsInfo">
+        <foreach collection="list" index="index" item="userId" open="" separator="union all" close="">
+            SELECT * from (select * from GPS_INFO WHERE user_id =#{userId} order by receive_time desc ) t where rownum=1
+            /*GPS_WEEK_INFO*/
+        </foreach>
+    </select>
+    <select id="getLastByName" resultType="com.lnet.model.tms.dispatch.dispatchEntity.GpsInfo">
+        SELECT * from (select DISTINCT g.* from GPS_INFO g left join dispatch d
+        on g.dispatch_number=d.dispatch_number and d.status ='INTRANSIT'
+        WHERE g.driver like CONCAT(CONCAT('%', #{name}), '%')
+        or g.vehicle_no like CONCAT(CONCAT('%', #{name}), '%')
+        or g.dispatch_number like CONCAT(CONCAT('%', #{name}), '%')
+        order by g.receive_time desc ) t where rownum=1 /*GPS_WEEK_INFO*/
+    </select>
+    <select id="findLastByDispatchNos" resultType="com.lnet.model.tms.dispatch.dispatchEntity.GpsInfo">
+        <foreach collection="list" index="index" item="dispatchNo" open="" separator="union all" close="">
+            SELECT * from (select * from GPS_INFO WHERE dispatch_number =#{dispatchNo} order by receive_time desc ) t
+            where rownum=1
+            /*GPS_WEEK_INFO*/
+        </foreach>
+    </select>
+    <insert id="insert" parameterType="com.lnet.model.tms.dispatch.dispatchEntity.GpsInfo">
+        insert into GPS_INFO (GPS_ID, DISPATCH_NUMBER, USER_ID,
+        VEHICLE_NO,DRIVER, LONGITUDE, LATITUDE,
+        DIRECTION, RECEIVE_TIME, ADDRESS,
+        REMARK)
+        values (#{gpsId,jdbcType=VARCHAR}, #{dispatchNumber,jdbcType=VARCHAR}, #{userId,jdbcType=VARCHAR},
+        #{vehicleNo,jdbcType=VARCHAR}, #{driver,jdbcType=VARCHAR}, #{longitude,jdbcType=DECIMAL}, #{latitude,jdbcType=DECIMAL},
+        #{direction,jdbcType=DECIMAL}, #{receiveTime,jdbcType=TIMESTAMP}, #{address,jdbcType=NVARCHAR},
+        #{remark,jdbcType=NVARCHAR})
+    </insert>
+    <insert id="batchCreate" parameterType="java.util.ArrayList">
+        insert into GPS_INFO (GPS_ID, DISPATCH_NUMBER, USER_ID,
+        VEHICLE_NO,DRIVER, LONGITUDE, LATITUDE,
+        DIRECTION, RECEIVE_TIME, ADDRESS,
+        REMARK)
+        <foreach collection="list" index="index" open="(" separator="union all" close=")" item="item">
+            SELECT
+            #{item.gpsId,jdbcType=VARCHAR},
+            #{item.dispatchNumber,jdbcType=VARCHAR},
+            #{item.userId,jdbcType=VARCHAR},
+            #{item.vehicleNo,jdbcType=VARCHAR},
+            #{item.driver,jdbcType=VARCHAR},
+            #{item.longitude,jdbcType=DECIMAL},
+            #{item.latitude,jdbcType=DECIMAL},
+            #{item.direction,jdbcType=DECIMAL},
+            #{item.receiveTime,jdbcType=TIMESTAMP},
+            #{item.address,jdbcType=NVARCHAR},
+            #{item.remark,jdbcType=NVARCHAR} from dual
+        </foreach>
+    </insert>
+</mapper>

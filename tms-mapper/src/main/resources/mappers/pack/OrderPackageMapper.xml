@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lnet.tms.mapper.OrderPackageMapper">
+    <resultMap id="BaseResultMap" type="com.lnet.model.tms.pack.packEntity.OrderPackage">
+        <id column="ITEM_ID" property="itemId" jdbcType="VARCHAR"/>
+        <result column="ORDER_NO" property="orderNo" jdbcType="VARCHAR"/>
+        <result column="PACKAGE_ID" property="packageId" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    ITEM_ID, ORDER_NO, PACKAGE_ID
+  </sql>
+    <select id="selectById" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from ORDER_PACKAGE
+        where ITEM_ID = #{itemId,jdbcType=VARCHAR}
+    </select>
+    <select id="findByOrderNos" resultType="com.lnet.model.tms.pack.packEntity.OrderPackage">
+        select
+        <include refid="Base_Column_List"/>
+        from ORDER_PACKAGE
+        where ORDER_NO IN
+        <foreach collection="list" open="(" close=")" separator="," index="index" item="item">
+            #{item,jdbcType=VARCHAR}
+        </foreach>
+    </select>
+    <select id="findByPackageId" resultType="com.lnet.model.tms.pack.packEntity.OrderPackage">
+        select
+        <include refid="Base_Column_List"/>
+        from ORDER_PACKAGE
+        where package_id = #{packageId,jdbcType=VARCHAR}
+    </select>
+    <select id="findByOrderNo" resultType="com.lnet.model.tms.pack.packDto.OrderPackageRecordDto">
+    select DISTINCT pi.* from Order_Packing_Info pi LEFT join Order_Package p
+     on pi.order_no = p.order_no
+    LEFT join Package p2 on p2.package_id = p.package_id
+          where (p2.package_id  in (SELECT op.package_id  from order_package op WHERE
+        op.order_no = #{orderNo,jdbcType=VARCHAR})
+        or pi.order_no = #{orderNo,jdbcType=VARCHAR})
+  </select>
+    <select id="findRecordByOrderNos" resultType="com.lnet.model.tms.pack.packDto.OrderPackageRecordDto">
+        select DISTINCT pi.* from Order_Packing_Info pi LEFT join Order_Package p
+        on pi.order_no = p.order_no
+        LEFT join Package p2 on p2.package_id = p.package_id
+        where (p2.package_id in (SELECT op.package_id from order_package op WHERE
+        op.order_no in
+        <foreach collection="list" open="(" close=")" separator="," index="index" item="item">
+            #{item,jdbcType=VARCHAR}
+        </foreach>)
+        or pi.order_no in
+        <foreach collection="list" open="(" close=")" separator="," index="index" item="item">
+            #{item,jdbcType=VARCHAR}
+        </foreach>)
+    </select>
+    <delete id="deleteById" parameterType="java.lang.String">
+    delete from ORDER_PACKAGE
+    where ITEM_ID = #{itemId,jdbcType=VARCHAR}
+  </delete>
+    <delete id="deleteByNo">
+        delete from order_package where  order_no in
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+    <insert id="insert" parameterType="com.lnet.model.tms.pack.packEntity.OrderPackage">
+    insert into ORDER_PACKAGE (ITEM_ID, ORDER_NO, PACKAGE_ID
+      )
+    values (#{itemId,jdbcType=VARCHAR}, #{orderNo,jdbcType=VARCHAR}, #{packageId,jdbcType=VARCHAR}
+      )
+  </insert>
+    <insert id="batchInsert" parameterType="java.util.ArrayList">
+        insert into ORDER_PACKAGE (ITEM_ID, ORDER_NO, PACKAGE_ID)
+        <foreach collection="list" item="item" index="index" open="(" separator="union all" close=")">
+            select #{item.itemId,jdbcType=VARCHAR},
+            #{item.orderNo,jdbcType=VARCHAR},
+            #{item.packageId,jdbcType=VARCHAR} from dual
+        </foreach>
+    </insert>
+    <update id="update" parameterType="com.lnet.model.tms.pack.packEntity.OrderPackage">
+    update ORDER_PACKAGE
+    set ORDER_NO = #{orderNo,jdbcType=VARCHAR},
+      PACKAGE_ID = #{packageId,jdbcType=VARCHAR}
+    where ITEM_ID = #{itemId,jdbcType=VARCHAR}
+  </update>
+</mapper>

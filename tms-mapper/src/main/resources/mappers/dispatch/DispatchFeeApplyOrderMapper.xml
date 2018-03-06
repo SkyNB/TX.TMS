@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lnet.tms.mapper.DispatchFeeApplyOrderMapper">
+    <resultMap id="BaseResultMap" type="com.lnet.model.tms.dispatch.dispatchEntity.DispatchFeeApplyOrder">
+        <id column="FEE_APPLY_ORDER_ID" property="feeApplyOrderId" jdbcType="VARCHAR"/>
+        <result column="FEE_APPLY_ID" property="feeApplyId" jdbcType="VARCHAR"/>
+        <result column="ORDER_NO" property="orderNo" jdbcType="VARCHAR"/>
+        <result column="ORDER_TYPE" property="orderType" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    FEE_APPLY_ORDER_ID, FEE_APPLY_ID, ORDER_NO, ORDER_TYPE
+  </sql>
+    <select id="findByFeeApplyId" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from DISPATCH_FEE_APPLY_ORDER
+        where FEE_APPLY_ID = #{feeApplyId,jdbcType=VARCHAR}
+    </select>
+    <insert id="batchInsert" parameterType="java.util.List">
+        insert into DISPATCH_FEE_APPLY_ORDER (<include refid="Base_Column_List"/>)
+        (
+        <foreach collection="list" item="item" index="index" separator="union all">
+            select #{item.feeApplyOrderId,jdbcType=VARCHAR},
+            #{item.feeApplyId,jdbcType=VARCHAR},
+            #{item.orderNo,jdbcType=VARCHAR},
+            #{item.orderType,jdbcType=VARCHAR} from dual
+        </foreach>
+        )
+    </insert>
+</mapper>

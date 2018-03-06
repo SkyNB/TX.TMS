@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lnet.tms.mapper.DispatchLogMapper">
+    <resultMap id="BaseResultMap" type="com.lnet.model.tms.dispatch.dispatchEntity.DispatchLog">
+        <id column="DISPATCH_LOG_ID" property="dispatchLogId" jdbcType="VARCHAR"/>
+        <result column="DISPATCH_ID" property="dispatchId" jdbcType="VARCHAR"/>
+        <result column="STATUS" property="status" jdbcType="VARCHAR"/>
+        <result column="OPERATION_TIME" property="operationTime" jdbcType="TIMESTAMP"/>
+        <result column="OPERATOR" property="operator" jdbcType="VARCHAR"/>
+        <result column="OPERATOR_ID" property="operatorId" jdbcType="VARCHAR"/>
+        <result column="OPERATION_CONTENT" property="operationContent" jdbcType="NVARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    DISPATCH_LOG_ID, DISPATCH_ID, STATUS, OPERATION_TIME, OPERATOR, OPERATOR_ID, OPERATION_CONTENT
+  </sql>
+    <select id="findByDispatchId" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from DISPATCH_LOG
+        where DISPATCH_ID = #{dispatchId,jdbcType=VARCHAR} order by OPERATION_TIME desc
+    </select>
+    <insert id="insert" parameterType="com.lnet.model.tms.dispatch.dispatchEntity.DispatchLog">
+    insert into DISPATCH_LOG (DISPATCH_LOG_ID, DISPATCH_ID, STATUS, 
+      OPERATION_TIME, OPERATOR, OPERATOR_ID, 
+      OPERATION_CONTENT)
+    values (#{dispatchLogId,jdbcType=VARCHAR}, #{dispatchId,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, 
+      #{operationTime,jdbcType=TIMESTAMP}, #{operator,jdbcType=VARCHAR}, #{operatorId,jdbcType=VARCHAR}, 
+      #{operationContent,jdbcType=NVARCHAR})
+  </insert>
+    <insert id="batchInsert" parameterType="java.util.List">
+        insert into DISPATCH_LOG (<include refid="Base_Column_List"/>)
+        (
+        <foreach collection="list" item="item" index="index" separator="union all">
+            select #{item.dispatchLogId,jdbcType=VARCHAR}, #{item.dispatchId,jdbcType=VARCHAR},
+            #{item.status,jdbcType=VARCHAR},
+            #{item.operationTime,jdbcType=TIMESTAMP}, #{item.operator,jdbcType=VARCHAR},
+            #{item.operatorId,jdbcType=VARCHAR},
+            #{item.operationContent,jdbcType=NVARCHAR} from dual
+        </foreach>
+        )
+    </insert>
+</mapper>

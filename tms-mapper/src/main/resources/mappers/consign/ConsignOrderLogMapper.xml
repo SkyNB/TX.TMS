@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lnet.tms.mapper.ConsignOrderLogMapper" >
+  <resultMap id="BaseResultMap" type="com.lnet.model.tms.consign.consignEntity.ConsignOrderLog" >
+    <id column="LOG_ID" property="logId" jdbcType="VARCHAR" />
+    <result column="CONSIGN_ORDER_ID" property="consignOrderId" jdbcType="VARCHAR" />
+    <result column="STATUS" property="status" jdbcType="VARCHAR" />
+    <result column="OPERATION_TIME" property="operationTime" jdbcType="TIMESTAMP" />
+    <result column="OPERATION_CONTENT" property="operationContent" jdbcType="NVARCHAR" />
+    <result column="OPERATOR_ID" property="operatorId" jdbcType="VARCHAR" />
+    <result column="WHETHER_FEEDBACK" property="whetherFeedback" jdbcType="DECIMAL" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    LOG_ID, CONSIGN_ORDER_ID, STATUS, OPERATION_TIME, OPERATION_CONTENT, OPERATOR_ID, 
+    WHETHER_FEEDBACK
+  </sql>
+  <insert id="insert" parameterType="com.lnet.model.tms.consign.consignEntity.ConsignOrderLog" >
+    insert into CONSIGN_ORDER_LOG (LOG_ID, CONSIGN_ORDER_ID, STATUS, 
+      OPERATION_TIME, OPERATION_CONTENT, OPERATOR_ID, 
+      WHETHER_FEEDBACK)
+    values (#{logId,jdbcType=VARCHAR}, #{consignOrderId,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, 
+      #{operationTime,jdbcType=TIMESTAMP}, #{operationContent,jdbcType=NVARCHAR}, #{operatorId,jdbcType=VARCHAR}, 
+      #{whetherFeedback,jdbcType=DECIMAL})
+  </insert>
+  <insert id="batchInsert" parameterType="java.util.List">
+    insert into CONSIGN_ORDER_LOG (<include refid="Base_Column_List"/>)
+    (
+    <foreach collection="list" item="item" index="index" separator="union all">
+      select #{item.logId,jdbcType=VARCHAR}, #{item.consignOrderId,jdbcType=VARCHAR}, #{item.status,jdbcType=VARCHAR},
+      #{item.operationTime,jdbcType=TIMESTAMP}, #{item.operationContent,jdbcType=NVARCHAR}, #{item.operatorId,jdbcType=VARCHAR},
+      #{item.whetherFeedback,jdbcType=DECIMAL} from dual
+    </foreach>
+    )
+  </insert>
+  <select id="findByConsignOrderId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from CONSIGN_ORDER_LOG
+    where CONSIGN_ORDER_ID = #{consignOrderId,jdbcType=VARCHAR}
+  </select>
+</mapper>

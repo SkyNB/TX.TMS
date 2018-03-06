@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+     http://code.alibabatech.com/schema/dubbo
+     http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+    <dubbo:application name="ums-consumer"/>
+    <dubbo:registry address="zookeeper://192.168.1.11:2181" client="zkclient"/>
+    <dubbo:consumer timeout="5000" retries="0"/>
+
+
+    <dubbo:reference id="districtService" interface="com.lnet.base.contract.spi.DistrictService"/>
+
+    <dubbo:reference id="expenseAccountService" interface="com.lnet.ums.contract.api.ExpenseAccountService"/>
+    <dubbo:reference id="organizationService" interface="com.lnet.ums.contract.api.OrganizationService"/>
+    <dubbo:reference id="roleService" interface="com.lnet.ums.contract.api.RoleService"/>
+    <dubbo:reference id="siteService" interface="com.lnet.ums.contract.api.SiteService"/>
+    <dubbo:reference id="userService" interface="com.lnet.ums.contract.api.UserService"/>
+
+
+    <dubbo:reference id="carrierService" interface="com.lnet.ums.contract.api.CarrierService"/>
+    <dubbo:reference id="businessGroupService" interface="com.lnet.ums.contract.api.BusinessGroupService"/>
+    <dubbo:reference id="collectingAddressService" interface="com.lnet.ums.contract.api.CollectingAddressService"/>
+    <dubbo:reference id="deliveryAddressService" interface="com.lnet.ums.contract.api.DeliveryAddressService"/>
+    <dubbo:reference id="goodsArchivesService" interface="com.lnet.ums.contract.api.GoodsArchivesService"/>
+    <dubbo:reference id="priceService" interface="com.lnet.ums.contract.api.PriceService"/>
+    <dubbo:reference id="storeService" interface="com.lnet.ums.contract.api.StoreService"/>
+    <dubbo:reference id="projectService" interface="com.lnet.ums.contract.api.ProjectService"/>
+    <dubbo:reference id="customerService" interface="com.lnet.ums.contract.api.CustomerService"/>
+    <dubbo:reference id="vehicleService" interface="com.lnet.ums.contract.api.VehicleService"/>
+    <dubbo:reference id="vehicleTypeService" interface="com.lnet.ums.contract.api.VehicleTypeService"/>
+    <dubbo:reference id="shipAddressService" interface="com.lnet.ums.contract.api.ShipAddressService"/>
+
+    <dubbo:reference id="collectingInstructionService" interface="com.lnet.oms.contract.api.CollectingInstructionService"/>
+    <dubbo:reference id="logisticsOrderService" interface="com.lnet.oms.contract.api.LogisticsOrderService"/>
+
+    <dubbo:reference id="payableService" interface="com.lnet.cnaps.contract.api.PayableService"/>
+    <dubbo:reference id="receivableService" interface="com.lnet.cnaps.contract.api.ReceivableService"/>
+
+
+</beans>

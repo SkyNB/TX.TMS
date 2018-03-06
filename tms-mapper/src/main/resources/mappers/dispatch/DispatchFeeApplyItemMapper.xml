@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lnet.tms.mapper.DispatchFeeApplyItemMapper">
+    <resultMap id="BaseResultMap" type="com.lnet.model.tms.dispatch.dispatchEntity.DispatchFeeApplyItem">
+        <id column="FEE_APPLY_ITEM_ID" property="feeApplyItemId" jdbcType="VARCHAR"/>
+        <result column="FEE_APPLY_ID" property="feeApplyId" jdbcType="VARCHAR"/>
+        <result column="ACCOUNT_CODE" property="accountCode" jdbcType="VARCHAR"/>
+        <result column="APPLY_AMOUNT" property="applyAmount" jdbcType="DECIMAL"/>
+        <result column="APPLY_REMARK" property="applyRemark" jdbcType="NVARCHAR"/>
+        <result column="APPROVE_AMOUNT" property="approveAmount" jdbcType="DECIMAL"/>
+        <result column="APPROVE_REMARK" property="approveRemark" jdbcType="NVARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    FEE_APPLY_ITEM_ID, FEE_APPLY_ID, ACCOUNT_CODE, APPLY_AMOUNT, APPLY_REMARK, APPROVE_AMOUNT, 
+    APPROVE_REMARK
+  </sql>
+    <select id="findByApplyId" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from DISPATCH_FEE_APPLY_ITEM
+        where FEE_APPLY_ID = #{feeApplyId,jdbcType=VARCHAR}
+    </select>
+    <insert id="batchInsert" parameterType="java.util.List">
+        insert into DISPATCH_FEE_APPLY_ITEM (<include refid="Base_Column_List"/>)
+        (
+        <foreach collection="list" item="item" index="index" separator="union all">
+            select #{item.feeApplyItemId,jdbcType=VARCHAR}, #{item.feeApplyId,jdbcType=VARCHAR},
+            #{item.accountCode,jdbcType=VARCHAR},
+            #{item.applyAmount,jdbcType=DECIMAL}, #{item.applyRemark,jdbcType=NVARCHAR},
+            #{item.approveAmount,jdbcType=DECIMAL},
+            #{item.approveRemark,jdbcType=NVARCHAR} from dual
+        </foreach>
+        )
+    </insert>
+    <update id="batchUpdate" parameterType="java.util.List">
+        <foreach collection="list" item="item" index="index" open="begin" close=";end;" separator=";">
+            update DISPATCH_FEE_APPLY_ITEM
+            set FEE_APPLY_ID = #{item.feeApplyId,jdbcType=VARCHAR},
+            ACCOUNT_CODE = #{item.accountCode,jdbcType=VARCHAR},
+            APPLY_AMOUNT = #{item.applyAmount,jdbcType=DECIMAL},
+            APPLY_REMARK = #{item.applyRemark,jdbcType=NVARCHAR},
+            APPROVE_AMOUNT = #{item.approveAmount,jdbcType=DECIMAL},
+            APPROVE_REMARK = #{item.approveRemark,jdbcType=NVARCHAR}
+            where FEE_APPLY_ITEM_ID = #{item.feeApplyItemId,jdbcType=VARCHAR}
+        </foreach>
+    </update>
+</mapper>

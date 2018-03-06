@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lnet.tms.mapper.OrderTraceMapper">
+    <resultMap id="BaseResultMap" type="com.lnet.model.tms.order.orderEntity.OrderTrace">
+        <id column="tracing_id" property="tracingId" jdbcType="VARCHAR"/>
+        <result column="order_no" property="orderNo" jdbcType="VARCHAR"/>
+        <result column="customer_order_no" property="customerOrderNo" jdbcType="VARCHAR"/>
+        <result column="customer_code" property="customerCode" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    tracing_id, order_no, customer_order_no, customer_code
+  </sql>
+
+    <select id="getById" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from ORDER_TRACE
+        where tracing_id = #{tracingId,jdbcType=VARCHAR}
+    </select>
+
+    <select id="getByOrderNo" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from ORDER_TRACE
+        where order_no = #{orderNo,jdbcType=VARCHAR}
+    </select>
+
+    <delete id="deleteById" parameterType="java.lang.String">
+    delete from ORDER_TRACE
+    where tracing_id = #{tracingId,jdbcType=VARCHAR}
+  </delete>
+
+    <insert id="insert" parameterType="com.lnet.model.tms.order.orderEntity.OrderTrace">
+    insert into ORDER_TRACE (tracing_id, order_no, customer_order_no,
+      customer_code)
+    values (#{tracingId,jdbcType=VARCHAR}, #{orderNo,jdbcType=VARCHAR}, #{customerOrderNo,jdbcType=VARCHAR}, 
+      #{customerCode,jdbcType=VARCHAR})
+  </insert>
+
+    <update id="update" parameterType="com.lnet.model.tms.order.orderEntity.OrderTrace">
+    update ORDER_TRACE
+    set order_no = #{orderNo,jdbcType=VARCHAR},
+      customer_order_no = #{customerOrderNo,jdbcType=VARCHAR},
+      customer_code = #{customerCode,jdbcType=VARCHAR}
+    where tracing_id = #{tracingId,jdbcType=VARCHAR}
+  </update>
+    <select id="exists" resultType="boolean">
+        select
+        CASE WHEN count(*) > 0 THEN 1 ELSE 0 END
+        from ORDER_TRACE
+        <where>
+            <if test="orderNo != null ">
+                order_no = #{orderNo,jdbcType=NVARCHAR}
+            </if>
+        </where>
+    </select>
+</mapper>

@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lnet.tms.mapper.ConsignOrderOperationTimeMapper">
+    <resultMap id="BaseResultMap" type="com.lnet.model.tms.consign.consignEntity.ConsignOrderOperationTime">
+        <id column="CONSIGN_ORDER_ID" property="consignOrderId" jdbcType="NVARCHAR"/>
+        <result column="EXPECTED_FINISH_TIME" property="expectedFinishTime" jdbcType="TIMESTAMP"/>
+        <result column="CONSIGN_TIME" property="consignTime" jdbcType="TIMESTAMP"/>
+        <result column="FEEDBACK_CONSIGN_TIME" property="feedbackConsignTime" jdbcType="TIMESTAMP"/>
+        <result column="STARTUP_TIME" property="startupTime" jdbcType="TIMESTAMP"/>
+        <result column="ARRIVE_TIME" property="arriveTime" jdbcType="TIMESTAMP"/>
+        <result column="FINISH_TIME" property="finishTime" jdbcType="TIMESTAMP"/>
+        <result column="PREDICT_ARRIVE_TIME" property="predictArriveTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    CONSIGN_ORDER_ID, EXPECTED_FINISH_TIME, CONSIGN_TIME, FEEDBACK_CONSIGN_TIME, STARTUP_TIME, 
+    ARRIVE_TIME, FINISH_TIME, PREDICT_ARRIVE_TIME
+  </sql>
+    <select id="get" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from CONSIGN_ORDER_OPERATION_TIME
+        where CONSIGN_ORDER_ID = #{consignOrderId,jdbcType=NVARCHAR}
+    </select>
+    <delete id="delete" parameterType="java.lang.String">
+    delete from CONSIGN_ORDER_OPERATION_TIME
+    where CONSIGN_ORDER_ID = #{consignOrderId,jdbcType=NVARCHAR}
+  </delete>
+    <insert id="insert" parameterType="com.lnet.model.tms.consign.consignEntity.ConsignOrderOperationTime">
+    insert into CONSIGN_ORDER_OPERATION_TIME (<include refid="Base_Column_List"/>)
+    values (#{consignOrderId,jdbcType=NVARCHAR}, #{expectedFinishTime,jdbcType=TIMESTAMP}, 
+      #{consignTime,jdbcType=TIMESTAMP}, #{feedbackConsignTime,jdbcType=TIMESTAMP}, #{startupTime,jdbcType=TIMESTAMP}, 
+      #{arriveTime,jdbcType=TIMESTAMP}, #{finishTime,jdbcType=TIMESTAMP}, #{predictArriveTime,jdbcType=TIMESTAMP})
+  </insert>
+    <update id="update" parameterType="com.lnet.model.tms.consign.consignEntity.ConsignOrderOperationTime">
+    update CONSIGN_ORDER_OPERATION_TIME
+    set EXPECTED_FINISH_TIME = #{expectedFinishTime,jdbcType=TIMESTAMP},
+      CONSIGN_TIME = #{consignTime,jdbcType=TIMESTAMP},
+      FEEDBACK_CONSIGN_TIME = #{feedbackConsignTime,jdbcType=TIMESTAMP},
+      STARTUP_TIME = #{startupTime,jdbcType=TIMESTAMP},
+      ARRIVE_TIME = #{arriveTime,jdbcType=TIMESTAMP},
+      FINISH_TIME = #{finishTime,jdbcType=TIMESTAMP},
+      PREDICT_ARRIVE_TIME = #{predictArriveTime,jdbcType=TIMESTAMP}
+    where CONSIGN_ORDER_ID = #{consignOrderId,jdbcType=NVARCHAR}
+  </update>
+    <insert id="batchInsert" parameterType="java.util.List">
+        insert into CONSIGN_ORDER_OPERATION_TIME (<include refid="Base_Column_List"/>)
+        (
+        <foreach collection="list" item="item" index="index" separator="union all">
+            select #{item.consignOrderId,jdbcType=NVARCHAR}, #{item.expectedFinishTime,jdbcType=TIMESTAMP},
+            #{item.consignTime,jdbcType=TIMESTAMP}, #{item.feedbackConsignTime,jdbcType=TIMESTAMP},
+            #{item.startupTime,jdbcType=TIMESTAMP},
+            #{item.arriveTime,jdbcType=TIMESTAMP}, #{item.finishTime,jdbcType=TIMESTAMP}
+            #{item.predictArriveTime,jdbcType=TIMESTAMP} from dual
+        </foreach>
+        )
+    </insert>
+    <update id="batchUpdate" parameterType="java.util.List">
+        <foreach collection="list" item="item" index="index" open="begin" close=";end;" separator=";">
+            update CONSIGN_ORDER_OPERATION_TIME
+            set EXPECTED_FINISH_TIME = #{item.expectedFinishTime,jdbcType=TIMESTAMP},
+            CONSIGN_TIME = #{item.consignTime,jdbcType=TIMESTAMP},
+            FEEDBACK_CONSIGN_TIME = #{item.feedbackConsignTime,jdbcType=TIMESTAMP},
+            STARTUP_TIME = #{item.startupTime,jdbcType=TIMESTAMP},
+            ARRIVE_TIME = #{item.arriveTime,jdbcType=TIMESTAMP},
+            FINISH_TIME = #{item.finishTime,jdbcType=TIMESTAMP},
+            PREDICT_ARRIVE_TIME = #{item.predictArriveTime,jdbcType=TIMESTAMP}
+            where CONSIGN_ORDER_ID = #{item.consignOrderId,jdbcType=NVARCHAR}
+        </foreach>
+    </update>
+    <update id="batchUpdateConsignTime" parameterType="java.util.List">
+        <foreach collection="list" item="item" index="index" open="begin" close=";end;" separator=";">
+            update CONSIGN_ORDER_OPERATION_TIME
+            set CONSIGN_TIME = #{item.consignTime,jdbcType=TIMESTAMP},
+            FEEDBACK_CONSIGN_TIME = #{item.feedbackConsignTime,jdbcType=TIMESTAMP}
+            where CONSIGN_ORDER_ID = #{item.consignOrderId,jdbcType=NVARCHAR}
+        </foreach>
+    </update>
+    <update id="batchUpdateStartUpTime" parameterType="java.util.List">
+        update CONSIGN_ORDER_OPERATION_TIME
+        set STARTUP_TIME = #{startUpTime,jdbcType=TIMESTAMP}
+        where CONSIGN_ORDER_ID IN
+        <foreach collection="consignOrderIds" open="(" close=")" separator="," index="index" item="consignOrderId">
+            #{consignOrderId,jdbcType=NVARCHAR}
+        </foreach>
+    </update>
+    <update id="batchUpdateFinishTime" parameterType="java.util.List">
+        update CONSIGN_ORDER_OPERATION_TIME
+        set FINISH_TIME = #{finishTime,jdbcType=TIMESTAMP}
+        where CONSIGN_ORDER_ID IN
+        <foreach collection="consignOrderIds" open="(" close=")" separator="," index="index" item="consignOrderId">
+            #{consignOrderId,jdbcType=NVARCHAR}
+        </foreach>
+    </update>
+    <update id="batchUpdateArriveTime" parameterType="java.util.List">
+        update CONSIGN_ORDER_OPERATION_TIME
+        set ARRIVE_TIME = #{arriveTime,jdbcType=TIMESTAMP}
+        where CONSIGN_ORDER_ID IN
+        <foreach collection="consignOrderIds" open="(" close=")" separator="," index="index" item="consignOrderId">
+            #{consignOrderId,jdbcType=NVARCHAR}
+        </foreach>
+    </update>
+    <select id="findByConsignOrderIds" resultMap="BaseResultMap" parameterType="java.util.List">
+        select
+        <include refid="Base_Column_List"/>
+        from CONSIGN_ORDER_OPERATION_TIME
+        where CONSIGN_ORDER_ID IN
+        <foreach collection="list" open="(" close=")" separator="," index="index" item="item">
+            #{item,jdbcType=NVARCHAR}
+        </foreach>
+    </select>
+</mapper>

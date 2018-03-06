@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lnet.tms.mapper.DispatchItemMapper">
+    <resultMap id="BaseResultMap" type="com.lnet.model.tms.dispatch.dispatchEntity.DispatchItem">
+        <id column="DISPATCH_ITEM_ID" property="dispatchItemId" jdbcType="VARCHAR"/>
+        <result column="DISPATCH_ID" property="dispatchId" jdbcType="VARCHAR"/>
+        <result column="ORDER_NO" property="orderNo" jdbcType="VARCHAR"/>
+        <result column="ORDER_TYPE" property="orderType" jdbcType="VARCHAR"/>
+        <result column="PACKAGE_QUANTITY" property="packageQuantity" jdbcType="DECIMAL"/>
+        <result column="VOLUME" property="volume" jdbcType="DECIMAL"/>
+        <result column="WEIGHT" property="weight" jdbcType="DECIMAL"/>
+        <result column="ORDER_DISPATCH_TYPE" property="orderDispatchType" jdbcType="VARCHAR"/>
+        <result column="CARRIER_CODE" property="carrierCode" jdbcType="VARCHAR"/>
+        <result column="IS_LOADED" property="isLoaded" jdbcType="DECIMAL"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    DISPATCH_ITEM_ID, DISPATCH_ID, ORDER_NO,  ORDER_TYPE, PACKAGE_QUANTITY,
+    VOLUME, WEIGHT,ORDER_DISPATCH_TYPE,CARRIER_CODE,IS_LOADED
+  </sql>
+    <select id="findByDispatchId" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from DISPATCH_ITEM
+        where DISPATCH_ID = #{dispatchId,jdbcType=VARCHAR}
+    </select>
+    <select id="findByDispatchIds" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from DISPATCH_ITEM
+        where DISPATCH_ID IN
+        <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+            #{item,jdbcType=NVARCHAR}
+        </foreach>
+    </select>
+    <select id="findByDispatchNumber" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from DISPATCH_ITEM
+        where DISPATCH_NUMBER = #{dispatchNumber,jdbcType=VARCHAR}
+    </select>
+    <delete id="delete" parameterType="java.lang.String">
+    delete from DISPATCH_ITEM
+    where DISPATCH_ITEM_ID = #{dispatchItemId,jdbcType=VARCHAR}
+  </delete>
+    <delete id="deleteByDispatchId" parameterType="java.lang.String">
+        delete from DISPATCH_ITEM
+        where DISPATCH_ID = #{dispatchId,jdbcType=VARCHAR}
+    </delete>
+    <delete id="batchDelete" parameterType="java.util.List">
+        delete from DISPATCH_ITEM
+        where DISPATCH_ITEM_ID in
+        <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+            #{item,jdbcType=NVARCHAR}
+        </foreach>
+    </delete>
+    <insert id="insert" parameterType="com.lnet.model.tms.dispatch.dispatchEntity.DispatchItem">
+    insert into DISPATCH_ITEM (DISPATCH_ITEM_ID, DISPATCH_ID, ORDER_NO, 
+      ORDER_TYPE, PACKAGE_QUANTITY, VOLUME, WEIGHT,ORDER_DISPATCH_TYPE,CARRIER_CODE,IS_LOADED)
+    values (#{dispatchItemId,jdbcType=VARCHAR}, #{dispatchId,jdbcType=VARCHAR}, #{orderNo,jdbcType=VARCHAR}, 
+       #{orderType,jdbcType=VARCHAR}, #{packageQuantity,jdbcType=DECIMAL},
+      #{volume,jdbcType=DECIMAL}, #{weight,jdbcType=DECIMAL},#{orderDispatchType,jdbcType=VARCHAR},
+      #{carrierCode,jdbcType=VARCHAR}, #{isLoaded,jdbcType=DECIMAL})
+  </insert>
+    <insert id="batchInsert" parameterType="java.util.List">
+        insert into DISPATCH_ITEM (<include refid="Base_Column_List"/>)
+        (
+        <foreach collection="list" item="item" index="index" separator="union all">
+            select #{item.dispatchItemId,jdbcType=VARCHAR}, #{item.dispatchId,jdbcType=VARCHAR},
+            #{item.orderNo,jdbcType=VARCHAR},
+            #{item.orderType,jdbcType=VARCHAR}, #{item.packageQuantity,jdbcType=DECIMAL},
+            #{item.volume,jdbcType=DECIMAL}, #{item.weight,jdbcType=DECIMAL},#{item.orderDispatchType,jdbcType=VARCHAR},
+            #{item.carrierCode,jdbcType=VARCHAR}, #{item.isLoaded,jdbcType=DECIMAL} from dual
+        </foreach>
+        )
+    </insert>
+    <update id="update" parameterType="com.lnet.model.tms.dispatch.dispatchEntity.DispatchItem">
+    update DISPATCH_ITEM
+    set DISPATCH_ID = #{dispatchId,jdbcType=VARCHAR},
+      ORDER_NO = #{orderNo,jdbcType=VARCHAR},
+      ORDER_TYPE = #{orderType,jdbcType=VARCHAR},
+      PACKAGE_QUANTITY = #{packageQuantity,jdbcType=DECIMAL},
+      VOLUME = #{volume,jdbcType=DECIMAL},
+      WEIGHT = #{weight,jdbcType=DECIMAL},
+      ORDER_DISPATCH_TYPE = #{orderDispatchType,jdbcType=VARCHAR},
+      CARRIER_CODE = #{carrierCode,jdbcType=VARCHAR},
+      IS_LOADED = #{isLoaded,jdbcType=DECIMAL}
+    where DISPATCH_ITEM_ID = #{dispatchItemId,jdbcType=VARCHAR}
+  </update>
+    <update id="batchUpdate" parameterType="java.util.List">
+        <foreach collection="list" item="item" index="index" open="begin" close=";end;" separator=";">
+            update DISPATCH_ITEM
+            set DISPATCH_ID = #{item.dispatchId,jdbcType=VARCHAR},
+            ORDER_NO = #{item.orderNo,jdbcType=VARCHAR},
+            ORDER_TYPE = #{item.orderType,jdbcType=VARCHAR},
+            PACKAGE_QUANTITY = #{item.packageQuantity,jdbcType=DECIMAL},
+            VOLUME = #{item.volume,jdbcType=DECIMAL},
+            WEIGHT = #{item.weight,jdbcType=DECIMAL},
+            ORDER_DISPATCH_TYPE = #{item.orderDispatchType,jdbcType=VARCHAR},
+            CARRIER_CODE = #{item.carrierCode,jdbcType=VARCHAR},
+            IS_LOADED = #{item.isLoaded,jdbcType=DECIMAL}
+            where DISPATCH_ITEM_ID = #{item.dispatchItemId,jdbcType=VARCHAR}
+        </foreach>
+    </update>
+    <select id="findByOrderNosAndSiteCode" resultMap="BaseResultMap">
+        SELECT DII.* FROM DISPATCH_ITEM DII LEFT JOIN DISPATCH DI
+        ON DII.DISPATCH_ID = DI.DISPATCH_ID
+        WHERE DI.SITE_CODE = #{siteCode,jdbcType=VARCHAR}
+        AND DII.ORDER_NO IN
+        <foreach collection="orderNos" item="item" index="index" open="(" separator="," close=")">
+            #{item,jdbcType=NVARCHAR}
+        </foreach>
+    </select>
+
+    <select id="pageList" resultType="com.lnet.model.tms.dispatch.dispatchDto.DispatchItemPayableDto">
+        select D.DISPATCH_NUMBER, D.BRANCH_CODE, D.SITE_CODE, D.VEHICLE_ID, D.VEHICLE_TYPE_ID,
+        D.VEHICLE_NUMBER, D.DRIVER, D.DRIVER_PHONE, D.STATUS,
+        D.TOTAL_PACKAGE_QUANTITY, D.TOTAL_VOLUME, D.TOTAL_WEIGHT, D.START_ADDRESS, D.DEST_ADDRESS,
+        D.EXPECT_FINISH_TIME, D.ASSIGN_DATE, D.ACCEPT_DATE, D.START_DATE, D.FINISHED_DATE, D.REMARK,
+        D.CREATED_BY, D.CREATED_DATE, D.MODIFIED_BY, D.MODIFIED_DATE,D.TOTAL_FEE,
+        di.DISPATCH_ITEM_ID, di.DISPATCH_ID, di.ORDER_NO,  di.ORDER_TYPE, di.PACKAGE_QUANTITY,
+        di.VOLUME, di.WEIGHT,ORDER_DISPATCH_TYPE,di.CARRIER_CODE,di.IS_LOADED from Dispatch_item di
+        left join dispatch d on d.dispatch_id = di.dispatch_id
+        <where>
+            and d.status = 'FINISHED'
+            <if test="branchCode!=null">
+                and d.branch_code = #{branchCode}
+            </if>
+            <if test="siteCode!=null">
+                and d.site_code = #{siteCode}
+            </if>
+            <if test="vehicleNumber!=null">
+                and d.VEHICLE_NUMBER like concat('%',concat(#{vehicleNumber},'%'))
+            </if>
+            <if test="dispatchNumber!=null">
+                and d.DISPATCH_NUMBER like concat('%',concat(#{dispatchNumber},'%'))
+            </if>
+            <if test="driver!=null">
+                and d.DRIVER like concat('%',concat(#{dri ver},'%'))
+            </if>
+            <if test="orderNo!=null">
+                and di.order_no like concat('%',concat(#{orderNo},'%'))
+            </if>
+        </where>
+        <if test="orderBy!=null">
+            ordey by ${orderBy}
+        </if>
+    </select>
+</mapper>

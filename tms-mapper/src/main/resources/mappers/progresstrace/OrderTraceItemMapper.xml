@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lnet.tms.mapper.OrderTraceItemMapper">
+    <resultMap id="BaseResultMap" type="com.lnet.model.tms.order.orderEntity.OrderTraceItem">
+        <id column="ITEM_ID" property="itemId" jdbcType="VARCHAR"/>
+        <result column="TRACING_ID" property="tracingId" jdbcType="VARCHAR"/>
+        <result column="OPERATOR" property="operator" jdbcType="NVARCHAR"/>
+        <result column="OPERATE_TIME" property="operateTime" jdbcType="TIMESTAMP"/>
+        <result column="OPERATE_ADDRESS" property="operateAddress" jdbcType="NVARCHAR"/>
+        <result column="DESCRIPTION" property="description" jdbcType="NVARCHAR"/>
+        <result column="TRACING_TIME" property="tracingTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    ITEM_ID, TRACING_ID, OPERATOR, OPERATE_TIME, OPERATE_ADDRESS, DESCRIPTION, TRACING_TIME
+  </sql>
+    <select id="getByTracingId" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from ORDER_TRACE_ITEM
+        where TRACING_ID = #{tracingId,jdbcType=VARCHAR}
+        order by OPERATE_TIME
+    </select>
+    <delete id="deleteById" parameterType="java.lang.String">
+    delete from ORDER_TRACE_ITEM
+    where ITEM_ID = #{itemId,jdbcType=VARCHAR}
+  </delete>
+    <insert id="insert" parameterType="com.lnet.model.tms.order.orderEntity.OrderTraceItem">
+    insert into ORDER_TRACE_ITEM (ITEM_ID, TRACING_ID, OPERATOR,
+      OPERATE_TIME, OPERATE_ADDRESS, DESCRIPTION, 
+      TRACING_TIME)
+    values (#{itemId,jdbcType=VARCHAR}, #{tracingId,jdbcType=VARCHAR}, #{operator,jdbcType=NVARCHAR}, 
+      #{operateTime,jdbcType=TIMESTAMP}, #{operateAddress,jdbcType=NVARCHAR}, #{description,jdbcType=NVARCHAR}, 
+      #{tracingTime,jdbcType=TIMESTAMP})
+  </insert>
+
+    <update id="update" parameterType="com.lnet.model.tms.order.orderEntity.OrderTraceItem">
+    update ORDER_TRACE_ITEM
+    set TRACING_ID = #{tracingId,jdbcType=VARCHAR},
+      OPERATOR = #{operator,jdbcType=NVARCHAR},
+      OPERATE_TIME = #{operateTime,jdbcType=TIMESTAMP},
+      OPERATE_ADDRESS = #{operateAddress,jdbcType=NVARCHAR},
+      DESCRIPTION = #{description,jdbcType=NVARCHAR},
+      TRACING_TIME = #{tracingTime,jdbcType=TIMESTAMP}
+    where ITEM_ID = #{itemId,jdbcType=VARCHAR}
+  </update>
+
+</mapper>

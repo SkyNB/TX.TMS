@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lnet.tms.mapper.PackageMapper">
+    <resultMap id="BaseResultMap" type="com.lnet.model.tms.pack.packEntity.Package">
+        <id column="PACKAGE_ID" property="packageId" jdbcType="VARCHAR"/>
+        <result column="PACKAGE_NO" property="packageNo" jdbcType="VARCHAR"/>
+        <result column="ITEM_QTY" property="itemQty" jdbcType="DECIMAL"/>
+        <result column="WEIGHT" property="weight" jdbcType="DECIMAL"/>
+        <result column="VOLUME" property="volume" jdbcType="DECIMAL"/>
+        <result column="PACKAGE_SIZE" property="packageSize" jdbcType="VARCHAR"/>
+        <result column="WRAP_MATERIAL" property="wrapMaterial" jdbcType="VARCHAR"/>
+        <result column="GOODS_DESC" property="goodsDesc" jdbcType="NVARCHAR"/>
+        <result column="STATUS" property="status" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    PACKAGE_ID, PACKAGE_NO, ITEM_QTY, WEIGHT, VOLUME, PACKAGE_SIZE, WRAP_MATERIAL, GOODS_DESC,
+    STATUS
+  </sql>
+    <select id="selectById" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from PACKAGE
+        where PACKAGE_ID = #{packageId,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteById" parameterType="java.lang.String">
+    delete from PACKAGE
+    where PACKAGE_ID = #{packageId,jdbcType=VARCHAR}
+  </delete>
+    <delete id="deleteByOrderNo">
+        delete from PACKAGE
+    where PACKAGE_ID in (
+    select op.package_id from order_package op where op.order_no = #{orderNo}
+    )
+    </delete>
+    <delete id="deleteByOrderNos">
+        delete from PACKAGE
+        where PACKAGE_ID in (
+        select op.package_id from order_package op where op.order_no IN
+        <foreach collection="list" open="(" close=")" separator="," index="index" item="item">
+            #{item,jdbcType=VARCHAR}
+        </foreach>
+        )
+    </delete>
+    <insert id="insert" parameterType="com.lnet.model.tms.pack.packEntity.Package">
+    insert into PACKAGE (PACKAGE_ID, PACKAGE_NO, ITEM_QTY,
+      WEIGHT, VOLUME, PACKAGE_SIZE,
+      WRAP_MATERIAL, GOODS_DESC, STATUS
+      )
+    values (#{packageId,jdbcType=VARCHAR}, #{packageNo,jdbcType=VARCHAR}, #{itemQty,jdbcType=DECIMAL},
+      #{weight,jdbcType=DECIMAL}, #{volume,jdbcType=DECIMAL}, #{packageSize,jdbcType=VARCHAR},
+      #{wrapMaterial,jdbcType=VARCHAR}, #{goodsDesc,jdbcType=NVARCHAR}, #{status,jdbcType=VARCHAR}
+      )
+  </insert>
+    <insert id="batchInsert" parameterType="java.util.ArrayList">
+        insert into PACKAGE (PACKAGE_ID, PACKAGE_NO, ITEM_QTY,
+        WEIGHT, VOLUME, PACKAGE_SIZE,
+        WRAP_MATERIAL, GOODS_DESC, STATUS
+        )
+        <foreach collection="list" index="index" item="item" open="(" separator="union all" close=")">
+            SELECT #{item.packageId,jdbcType=VARCHAR},
+            #{item.packageNo,jdbcType=VARCHAR},
+            #{item.itemQty,jdbcType=DECIMAL},
+            #{item.weight,jdbcType=DECIMAL},
+            #{item.volume,jdbcType=DECIMAL},
+            #{item.packageSize,jdbcType=VARCHAR},
+            #{item.wrapMaterial,jdbcType=VARCHAR},
+            #{item.goodsDesc,jdbcType=NVARCHAR},
+            #{item.status,jdbcType=VARCHAR}
+            from dual
+        </foreach>
+
+    </insert>
+    <update id="update" parameterType="com.lnet.model.tms.pack.packEntity.Package">
+    update PACKAGE
+    set PACKAGE_NO = #{packageNo,jdbcType=VARCHAR},
+      ITEM_QTY = #{itemQty,jdbcType=DECIMAL},
+      WEIGHT = #{weight,jdbcType=DECIMAL},
+      VOLUME = #{volume,jdbcType=DECIMAL},
+      PACKAGE_SIZE = #{packageSize,jdbcType=VARCHAR},
+      WRAP_MATERIAL = #{wrapMaterial,jdbcType=VARCHAR},
+      GOODS_DESC = #{goodsDesc,jdbcType=NVARCHAR},
+      STATUS = #{status,jdbcType=VARCHAR}
+    where PACKAGE_ID = #{packageId,jdbcType=VARCHAR}
+  </update>
+
+
+    <select id="getPackageNo" resultType="java.lang.String" flushCache="true" useCache="false">
+    SELECT package_no_sequence.nextval from dual
+  </select>
+
+    <select id="findPackByOrderNos" resultType="com.lnet.model.tms.pack.packEntity.Package">
+        select DISTINCT
+        p.*
+        from order_package pi INNER join PACKAGE p on p.package_id = pi.package_id
+        where pi.ORDER_NO IN
+        <foreach collection="list" open="(" close=")" separator="," index="index" item="item">
+            #{item,jdbcType=VARCHAR}
+        </foreach>
+    </select>
+    <select id="pageList" resultType="com.lnet.model.tms.pack.packEntity.Package">
+        select * from Package
+        <where>
+            <if test="packageNo != null">
+                package_No LIKE CONCAT(CONCAT('%',#{packageNo}),'%')
+            </if>
+            <if test="goodsDesc != null">
+                goods_Desc LIKE CONCAT(CONCAT('%',#{goodsDesc}),'%')
+            </if>
+            <if test="status != null">
+                status = #{status}
+            </if>
+        </where>
+        <if test="orderBy != null">
+            ORDER BY ${orderBy}
+        </if>
+    </select>
+    <select id="getByPackageId" resultType="com.lnet.model.tms.pack.packEntity.Package">
+        select DISTINCT p.* from Package p INNER join Order_Package p2 on p2.package_id = p.package_id
+          where p2.order_no  in (SELECT op.order_no  from order_package op WHERE
+        op.package_id = #{package_id,jdbcType=VARCHAR})
+    </select>
+    <select id="findPackByOrderNo" resultType="com.lnet.model.tms.pack.packEntity.Package">
+        select DISTINCT
+        p.*
+        from order_package pi INNER join PACKAGE p on p.package_id = pi.package_id
+        where pi.ORDER_NO =#{orderNo,jdbcType=VARCHAR}
+    </select>
+    <select id="pagePackageRecord" resultType="com.lnet.model.tms.pack.packDto.PackageRecordDto">
+        SELECT p.*,pr.packing_User,pr.packing_Time,pr.site_code,pr.branch_code
+        ,op.order_no from package p left join Package_Record pr on pr.package_id = p.package_id
+        left join Order_Package op on op.package_id =p.package_id
+        <where>
+            <if test="packageNo != null">
+                AND p.package_No LIKE CONCAT(CONCAT('%',#{packageNo}),'%')
+            </if>
+            <if test="orderNo != null">
+                AND op.order_no LIKE CONCAT(CONCAT('%',#{orderNo}),'%')
+            </if>
+            <if test="packingUser != null">
+                AND pr.packing_User = #{packingUser}
+            </if>
+            <if test="goodsDesc != null">
+                AND p.goods_Desc LIKE CONCAT(CONCAT('%',#{goodsDesc}),'%')
+            </if>
+            <if test="wrapMaterial != null">
+                AND p.wrap_Material = #{wrapMaterial}
+            </if>
+            <if test="status != null">
+                AND status = #{status}
+            </if>
+            <if test="month != null">
+                AND to_char(packing_Time,'YYYY-MM') = #{month}
+            </if>
+        </where>
+        <if test="orderBy != null">
+            ORDER BY ${orderBy}
+        </if>
+        <if test="orderBy == null">
+            ORDER BY pr.packing_Time desc
+        </if>
+    </select>
+</mapper>

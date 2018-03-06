@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lnet.tms.mapper.OrderReceiptMapper">
+    <resultMap id="BaseResultMap" type="com.lnet.model.tms.order.orderEntity.OrderReceipt">
+        <id column="RECEIPT_ID" property="receiptId" jdbcType="VARCHAR"/>
+        <result column="ORDER_NO" property="orderNo" jdbcType="VARCHAR"/>
+        <result column="CUSTOMER_CODE" property="customerCode" jdbcType="VARCHAR"/>
+        <result column="UPLOADED_TIME" property="uploadedTime" jdbcType="TIMESTAMP"/>
+        <result column="UPLOADED_USER_ID" property="uploadedUserId" jdbcType="VARCHAR"/>
+        <result column="CONTENT_TYPE" property="contentType" jdbcType="VARCHAR"/>
+        <result column="FILE_NAME" property="fileName" jdbcType="NVARCHAR"/>
+        <result column="FILE_PATH" property="filePath" jdbcType="VARCHAR"/>
+        <result column="THUMB_PATH" property="thumbPath" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        RECEIPT_ID, ORDER_NO, CUSTOMER_CODE, UPLOADED_TIME, UPLOADED_USER_ID, CONTENT_TYPE,
+        FILE_NAME, FILE_PATH, THUMB_PATH
+    </sql>
+
+    <insert id="insert" parameterType="com.lnet.model.tms.order.orderEntity.OrderReceipt">
+        INSERT INTO ORDER_RECEIPT (<include refid="Base_Column_List"/>)
+        VALUES (#{receiptId,jdbcType=VARCHAR}, #{orderNo,jdbcType=VARCHAR}, #{customerCode,jdbcType=VARCHAR},
+        #{uploadedTime,jdbcType=TIMESTAMP}, #{uploadedUserId,jdbcType=VARCHAR}, #{contentType,jdbcType=VARCHAR},
+        #{fileName,jdbcType=NVARCHAR}, #{filePath,jdbcType=VARCHAR}, #{thumbPath,jdbcType=VARCHAR}
+        )
+    </insert>
+
+    <insert id="batchInsert" parameterType="com.lnet.model.tms.order.orderEntity.OrderReceipt">
+        INSERT INTO ORDER_RECEIPT (<include refid="Base_Column_List"/>)
+        <foreach collection="list" item="item" index="index" open="(" close=")" separator="UNION ALL">
+            SELECT
+            #{item.receiptId,jdbcType=VARCHAR},
+            #{item.orderNo,jdbcType=VARCHAR},
+            #{item.customerCode,jdbcType=VARCHAR},
+            #{item.uploadedTime,jdbcType=TIMESTAMP},
+            #{item.uploadedUserId,jdbcType=VARCHAR},
+            #{item.contentType,jdbcType=VARCHAR},
+            #{item.fileName,jdbcType=NVARCHAR},
+            #{item.filePath,jdbcType=VARCHAR},
+            #{item.thumbPath,jdbcType=VARCHAR}
+            FROM DUAL
+        </foreach>
+    </insert>
+
+    <select id="getByCustomerCodeAndOrderNo" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM ORDER_RECEIPT
+        WHERE CUSTOMER_CODE = #{customerCode, jdbcType=VARCHAR} AND ORDER_NO = #{orderNo, jdbcType=VARCHAR}
+    </select>
+
+    <select id="findByCustomerOrderNos" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM ORDER_RECEIPT
+        WHERE ORDER_NO IN
+        <foreach collection="list" open="(" close=")" index="index" item="item" separator=",">
+            #{item}
+        </foreach>
+    </select>
+</mapper>

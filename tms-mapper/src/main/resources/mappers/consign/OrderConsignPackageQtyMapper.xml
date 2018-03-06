@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lnet.tms.mapper.OrderConsignPackageQtyMapper">
+    <resultMap id="BaseResultMap" type="com.lnet.model.tms.consign.consignEntity.OrderConsignPackageQty">
+        <id column="ID" property="id" jdbcType="VARCHAR"/>
+        <result column="ORDER_NO" property="orderNo" jdbcType="VARCHAR"/>
+        <result column="BRANCH_CODE" property="branchCode" jdbcType="VARCHAR"/>
+        <result column="SITE_CODE" property="siteCode" jdbcType="VARCHAR"/>
+        <result column="CONSIGNING_PACKAGE_QTY" property="consigningPackageQty" jdbcType="DECIMAL"/>
+        <result column="CONSIGNED_PACKAGE_QTY" property="consignedPackageQty" jdbcType="DECIMAL"/>
+        <result column="STARTUP_PACKAGE_QTY" property="startupPackageQty" jdbcType="DECIMAL"/>
+        <result column="ARRIVED_PACKAGE_QTY" property="arrivedPackageQty" jdbcType="DECIMAL"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    ID, ORDER_NO, BRANCH_CODE, SITE_CODE, CONSIGNING_PACKAGE_QTY, CONSIGNED_PACKAGE_QTY, 
+    STARTUP_PACKAGE_QTY, ARRIVED_PACKAGE_QTY
+  </sql>
+    <insert id="insert" parameterType="com.lnet.model.tms.consign.consignEntity.OrderConsignPackageQty">
+    insert into ORDER_CONSIGN_PACKAGE_QTY (ID, ORDER_NO, BRANCH_CODE, 
+      SITE_CODE, CONSIGNING_PACKAGE_QTY, CONSIGNED_PACKAGE_QTY, 
+      STARTUP_PACKAGE_QTY, ARRIVED_PACKAGE_QTY)
+    values (#{id,jdbcType=VARCHAR}, #{orderNo,jdbcType=VARCHAR}, #{branchCode,jdbcType=VARCHAR}, 
+      #{siteCode,jdbcType=VARCHAR}, #{consigningPackageQty,jdbcType=DECIMAL}, #{consignedPackageQty,jdbcType=DECIMAL}, 
+      #{startupPackageQty,jdbcType=DECIMAL}, #{arrivedPackageQty,jdbcType=DECIMAL})
+  </insert>
+    <insert id="batchInsert" parameterType="java.util.List">
+        insert into ORDER_CONSIGN_PACKAGE_QTY (<include refid="Base_Column_List"/>)
+        (
+        <foreach collection="list" item="item" index="index" separator="union all">
+            select #{item.id,jdbcType=VARCHAR}, #{item.orderNo,jdbcType=VARCHAR}, #{item.branchCode,jdbcType=VARCHAR},
+            #{item.siteCode,jdbcType=VARCHAR}, #{item.consigningPackageQty,jdbcType=DECIMAL},
+            #{item.consignedPackageQty,jdbcType=DECIMAL},
+            #{item.startupPackageQty,jdbcType=DECIMAL}, #{item.arrivedPackageQty,jdbcType=DECIMAL} from dual
+        </foreach>
+        )
+    </insert>
+    <update id="updateConsigningQty">
+    update ORDER_CONSIGN_PACKAGE_QTY
+    set ORDER_NO = #{orderNo,jdbcType=VARCHAR},
+      BRANCH_CODE = #{branchCode,jdbcType=VARCHAR},
+      SITE_CODE = #{siteCode,jdbcType=VARCHAR},
+      CONSIGNING_PACKAGE_QTY = #{consigningPackageQty,jdbcType=DECIMAL},
+      CONSIGNED_PACKAGE_QTY = #{consignedPackageQty,jdbcType=DECIMAL},
+      STARTUP_PACKAGE_QTY = #{startupPackageQty,jdbcType=DECIMAL},
+      ARRIVED_PACKAGE_QTY = #{arrivedPackageQty,jdbcType=DECIMAL}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+    <update id="batchUpdateConsigningQty" parameterType="java.util.List">
+        <foreach collection="list" item="item" index="index" open="begin" close=";end;" separator=";">
+            update ORDER_CONSIGN_PACKAGE_QTY
+            set CONSIGNING_PACKAGE_QTY = #{item.consigningPackageQty,jdbcType=DECIMAL}
+            where SITE_CODE = #{item.siteCode,jdbcType=VARCHAR} and
+            ORDER_NO = #{item.orderNo,jdbcType=VARCHAR}
+        </foreach>
+    </update>
+    <update id="batchUpdateConsignedQty" parameterType="java.util.List">
+        <foreach collection="list" item="item" index="index" open="begin" close=";end;" separator=";">
+            update ORDER_CONSIGN_PACKAGE_QTY
+            set CONSIGNED_PACKAGE_QTY = #{item.consignedPackageQty,jdbcType=DECIMAL}
+            where SITE_CODE = #{item.siteCode,jdbcType=VARCHAR} and
+            ORDER_NO = #{item.orderNo,jdbcType=VARCHAR}
+        </foreach>
+    </update>
+    <update id="batchUpdateStartUpQty" parameterType="java.util.List">
+        <foreach collection="list" item="item" index="index" open="begin" close=";end;" separator=";">
+            update ORDER_CONSIGN_PACKAGE_QTY
+            set STARTUP_PACKAGE_QTY = #{item.startupPackageQty,jdbcType=DECIMAL}
+            where SITE_CODE = #{item.siteCode,jdbcType=VARCHAR} and
+            ORDER_NO = #{item.orderNo,jdbcType=VARCHAR}
+        </foreach>
+    </update>
+    <update id="batchUpdateArriveQty" parameterType="java.util.List">
+        <foreach collection="list" item="item" index="index" open="begin" close=";end;" separator=";">
+            update ORDER_CONSIGN_PACKAGE_QTY
+            set ARRIVED_PACKAGE_QTY = #{item.arrivedPackageQty,jdbcType=DECIMAL}
+            where SITE_CODE = #{item.siteCode,jdbcType=VARCHAR} and
+            ORDER_NO = #{item.orderNo,jdbcType=VARCHAR}
+        </foreach>
+    </update>
+    <select id="getBySiteAndOrderNo" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from ORDER_CONSIGN_PACKAGE_QTY
+        where SITE_CODE = #{siteCode,jdbcType=VARCHAR} and ORDER_NO = #{orderNo,jdbcType=VARCHAR}
+    </select>
+    <select id="findBySiteAndOrderNo" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from ORDER_CONSIGN_PACKAGE_QTY
+        where SITE_CODE = #{siteCode,jdbcType=VARCHAR} and ORDER_NO IN
+        <foreach collection="orderNos" open="(" close=")" separator="," index="index" item="orderNo">
+            #{orderNo,jdbcType=NVARCHAR}
+        </foreach>
+    </select>
+</mapper>

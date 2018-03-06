@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>tms</artifactId>
+        <groupId>com.lnet.tms</groupId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>tms-contract</artifactId>
+
+    <dependencies>
+        <!--引用OMS：订单-->
+        <dependency>
+            <groupId>com.lnet.oms</groupId>
+            <artifactId>oms-contract</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <!--base: 客户，承运商-->
+        <dependency>
+            <groupId>com.lnet.base</groupId>
+            <artifactId>base-contract</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <!--引用UMS: 客户，承运商-->
+        <dependency>
+            <groupId>com.lnet.ums</groupId>
+            <artifactId>ums-contract</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <!--引用CNAPS：结算-->
+        <dependency>
+            <groupId>com.lnet.cnaps</groupId>
+            <artifactId>cnaps-contract</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.lnet.tms</groupId>
+            <artifactId>tms-common</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
+
+</project>

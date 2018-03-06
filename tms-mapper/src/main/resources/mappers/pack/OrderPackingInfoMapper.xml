@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lnet.tms.mapper.OrderPackingInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.lnet.model.tms.pack.packEntity.OrderPackingInfo" >
+    <id column="ORDER_NO" property="orderNo" jdbcType="VARCHAR" />
+    <result column="PACKAGE_ID" property="packageId" jdbcType="VARCHAR" />
+    <result column="WEIGHT" property="weight" jdbcType="DECIMAL" />
+    <result column="VOLUME" property="volume" jdbcType="DECIMAL" />
+    <result column="PACKAGE_QTY" property="packageQty" jdbcType="DECIMAL" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ORDER_NO, PACKAGE_ID, WEIGHT, VOLUME, PACKAGE_QTY
+  </sql>
+  <select id="selectById" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from ORDER_PACKING_INFO
+    where ORDER_NO = #{orderNo,jdbcType=VARCHAR}
+  </select>
+  <select id="findByOrderNo" resultType="com.lnet.model.tms.pack.packEntity.OrderPackingInfo">
+    select
+    <include refid="Base_Column_List" />
+    from ORDER_PACKING_INFO
+    where ORDER_NO IN
+    <foreach collection="list" open="(" close=")" separator="," index="index" item="item">
+      #{item,jdbcType=VARCHAR}
+    </foreach>
+  </select>
+    <select id="pageList" resultType="com.lnet.model.tms.pack.packDto.OrderPackageDto">
+      select pi.*,p.package_no,p.ITEM_QTY,
+      p.PACKAGE_SIZE, p.WRAP_MATERIAL, p.GOODS_DESC,p.status from Order_Packing_Info pi left join
+      package p on pi.package_id = p.package_id
+      <where>
+        <if test="orderNo != null">
+          order_No LIKE CONCAT(CONCAT('%',#{orderNo}),'%')
+        </if>
+        <if test="packageNo != null">
+          package_No LIKE CONCAT(CONCAT('%',#{packageNo}),'%')
+        </if>
+        <if test="goodsDesc != null">
+          goods_Desc LIKE CONCAT(CONCAT('%',#{goodsDesc}),'%')
+        </if>
+      </where>
+      <if test="orderBy != null">
+        ORDER BY ${orderBy}
+      </if>
+
+    </select>
+    <select id="findPackageByOrderNo" resultType="com.lnet.model.tms.pack.packDto.OrderPackageDto">
+      select pi.*,p.package_no,p.ITEM_QTY,
+      p.PACKAGE_SIZE, p.WRAP_MATERIAL, p.GOODS_DESC,p.status from Order_Packing_Info pi left join
+      package p on pi.package_id = p.package_id
+      WHERE pi.order_no =  #{orderNo,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteById" parameterType="java.lang.String" >
+    delete from ORDER_PACKING_INFO
+    where ORDER_NO = #{orderNo,jdbcType=VARCHAR}
+  </delete>
+    <delete id="deleteByIds">
+      delete from ORDER_PACKING_INFO
+    where ORDER_NO IN
+      <foreach collection="list" open="(" close=")" separator="," index="index" item="item">
+        #{item,jdbcType=VARCHAR}
+      </foreach>
+    </delete>
+    <insert id="insert" parameterType="com.lnet.model.tms.pack.packEntity.OrderPackingInfo" >
+    insert into ORDER_PACKING_INFO (ORDER_NO, PACKAGE_ID, WEIGHT, 
+      VOLUME, PACKAGE_QTY)
+    values (#{orderNo,jdbcType=VARCHAR}, #{packageId,jdbcType=VARCHAR}, #{weight,jdbcType=DECIMAL}, 
+      #{volume,jdbcType=DECIMAL}, #{packageQty,jdbcType=DECIMAL})
+  </insert>
+  <insert id="batchInsert" parameterType="java.util.ArrayList">
+      merge into ORDER_PACKING_INFO T using
+    <foreach collection="list" item="item" index="index" open="(" separator="union" close=")">
+      select #{item.orderNo,jdbcType=VARCHAR} order_no,
+      #{item.packageId,jdbcType=VARCHAR} package_id,
+      #{item.weight,jdbcType=DECIMAL} weight,
+      #{item.volume,jdbcType=DECIMAL} volume,
+      #{item.packageQty,jdbcType=DECIMAL} package_qty from dual
+    </foreach>
+    t2 on (T.order_no = t2.order_no)
+    when matched then
+    update set T.package_id  = t2.package_id,t.volume = t2.volume,t.weight=t2.weight,t.package_qty = t2.package_qty
+    when not matched then
+    insert (<include refid="Base_Column_List"/>)values(t2.order_no,t2.package_id, t2.volume, t2.weight,t2.package_qty)
+  </insert>
+
+  <update id="update" parameterType="com.lnet.model.tms.pack.packEntity.OrderPackingInfo" >
+    update ORDER_PACKING_INFO
+    set PACKAGE_ID = #{packageId,jdbcType=VARCHAR},
+      WEIGHT = #{weight,jdbcType=DECIMAL},
+      VOLUME = #{volume,jdbcType=DECIMAL},
+      PACKAGE_QTY = #{packageQty,jdbcType=DECIMAL}
+    where ORDER_NO = #{orderNo,jdbcType=VARCHAR}
+  </update>
+</mapper>

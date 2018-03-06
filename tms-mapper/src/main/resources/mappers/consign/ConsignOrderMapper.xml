@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lnet.tms.mapper.ConsignOrderMapper">
+    <resultMap id="BaseResultMap" type="com.lnet.model.tms.consign.consignEntity.ConsignOrder">
+        <id column="CONSIGN_ORDER_ID" property="consignOrderId" jdbcType="VARCHAR"/>
+        <result column="BRANCH_CODE" property="branchCode" jdbcType="VARCHAR"/>
+        <result column="SITE_CODE" property="siteCode" jdbcType="VARCHAR"/>
+        <result column="CONSIGN_ORDER_NO" property="consignOrderNo" jdbcType="VARCHAR"/>
+        <result column="IS_TEMPORARY_NO" property="isTemporaryNo" jdbcType="DECIMAL"/>
+        <result column="CARRIER_CODE" property="carrierCode" jdbcType="VARCHAR"/>
+        <result column="CARRIER_DRIVER" property="carrierDriver" jdbcType="NVARCHAR"/>
+        <result column="CARRIER_DRIVER_PHONE" property="carrierDriverPhone" jdbcType="NVARCHAR"/>
+        <result column="CARRIER_VEHICLE_NO" property="carrierVehicleNo" jdbcType="NVARCHAR"/>
+        <result column="TOTAL_PACKAGE_QUANTITY" property="totalPackageQuantity" jdbcType="DECIMAL"/>
+        <result column="TOTAL_VOLUME" property="totalVolume" jdbcType="DECIMAL"/>
+        <result column="TOTAL_WEIGHT" property="totalWeight" jdbcType="DECIMAL"/>
+        <result column="SETTLEMENT_CYCLE" property="settlementCycle" jdbcType="VARCHAR"/>
+        <result column="PAYMENT_TYPE" property="paymentType" jdbcType="VARCHAR"/>
+        <result column="CALCULATE_TYPE" property="calculateType" jdbcType="VARCHAR"/>
+        <result column="TRANSPORT_TYPE" property="transportType" jdbcType="VARCHAR"/>
+        <result column="STATUS" property="status" jdbcType="VARCHAR"/>
+        <result column="START_CITY_CODE" property="startCityCode" jdbcType="VARCHAR"/>
+        <result column="DEST_CITY_CODE" property="destCityCode" jdbcType="VARCHAR"/>
+        <result column="WHETHER_SIGN_RECEIPT" property="whetherSignReceipt" jdbcType="DECIMAL"/>
+        <result column="RECEIPT_PAGE_NUMBER" property="receiptPageNumber" jdbcType="DECIMAL"/>
+        <result column="GOODS_NAME" property="goodsName" jdbcType="NVARCHAR"/>
+        <result column="HANDOVER_TYPE" property="handoverType" jdbcType="VARCHAR"/>
+        <result column="WRAP_TYPE" property="wrapType" jdbcType="VARCHAR"/>
+        <result column="CONSIGNEE" property="consignee" jdbcType="NVARCHAR"/>
+        <result column="CONSIGNEE_ADDRESS" property="consigneeAddress" jdbcType="NVARCHAR"/>
+        <result column="CONSIGNEE_PHONE" property="consigneePhone" jdbcType="NVARCHAR"/>
+        <result column="TRANSFER_ORGANIZATION_CODE" property="transferOrganizationCode" jdbcType="VARCHAR"/>
+        <result column="TRANSFER_SITE_CODE" property="transferSiteCode" jdbcType="VARCHAR"/>
+        <result column="WHETHER_HAVE_UPSTAIRS_FEE" property="whetherHaveUpstairsFee" jdbcType="DECIMAL"/>
+        <result column="REMARK" property="remark" jdbcType="NVARCHAR"/>
+        <result column="CREATED_BY" property="createdBy" jdbcType="VARCHAR"/>
+        <result column="CREATE_DATE" property="createDate" jdbcType="TIMESTAMP"/>
+        <result column="MODIFIED_BY" property="modifiedBy" jdbcType="VARCHAR"/>
+        <result column="MODIFY_DATE" property="modifyDate" jdbcType="TIMESTAMP"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    CONSIGN_ORDER_ID, BRANCH_CODE, SITE_CODE, CONSIGN_ORDER_NO, IS_TEMPORARY_NO, CARRIER_CODE, 
+    CARRIER_DRIVER, CARRIER_DRIVER_PHONE, CARRIER_VEHICLE_NO, TOTAL_PACKAGE_QUANTITY, 
+    TOTAL_VOLUME, TOTAL_WEIGHT, SETTLEMENT_CYCLE, PAYMENT_TYPE, CALCULATE_TYPE, TRANSPORT_TYPE, 
+    STATUS, START_CITY_CODE, DEST_CITY_CODE, WHETHER_SIGN_RECEIPT, RECEIPT_PAGE_NUMBER, 
+    GOODS_NAME, HANDOVER_TYPE, WRAP_TYPE, CONSIGNEE, CONSIGNEE_ADDRESS, CONSIGNEE_PHONE, 
+    TRANSFER_ORGANIZATION_CODE,TRANSFER_SITE_CODE, WHETHER_HAVE_UPSTAIRS_FEE, REMARK,
+    CREATED_BY, CREATE_DATE, MODIFIED_BY, MODIFY_DATE
+  </sql>
+    <select id="get" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from CONSIGN_ORDER
+        where CONSIGN_ORDER_ID = #{consignOrderId,jdbcType=VARCHAR}
+    </select>
+    <delete id="delete" parameterType="java.lang.String">
+    delete from CONSIGN_ORDER
+    where CONSIGN_ORDER_ID = #{consignOrderId,jdbcType=VARCHAR}
+  </delete>
+    <insert id="insert" parameterType="com.lnet.model.tms.consign.consignEntity.ConsignOrder">
+    insert into CONSIGN_ORDER (CONSIGN_ORDER_ID, BRANCH_CODE, SITE_CODE, 
+      CONSIGN_ORDER_NO, IS_TEMPORARY_NO, CARRIER_CODE, 
+      CARRIER_DRIVER, CARRIER_DRIVER_PHONE, CARRIER_VEHICLE_NO, 
+      TOTAL_PACKAGE_QUANTITY, TOTAL_VOLUME, TOTAL_WEIGHT, 
+      SETTLEMENT_CYCLE, PAYMENT_TYPE, CALCULATE_TYPE, 
+      TRANSPORT_TYPE, STATUS, START_CITY_CODE, 
+      DEST_CITY_CODE, WHETHER_SIGN_RECEIPT, RECEIPT_PAGE_NUMBER, 
+      GOODS_NAME, HANDOVER_TYPE, WRAP_TYPE, 
+      CONSIGNEE, CONSIGNEE_ADDRESS, CONSIGNEE_PHONE, 
+      TRANSFER_ORGANIZATION_CODE,TRANSFER_SITE_CODE, WHETHER_HAVE_UPSTAIRS_FEE,
+      REMARK, CREATED_BY, CREATE_DATE, 
+      MODIFIED_BY, MODIFY_DATE)
+    values (#{consignOrderId,jdbcType=VARCHAR}, #{branchCode,jdbcType=VARCHAR}, #{siteCode,jdbcType=VARCHAR}, 
+      #{consignOrderNo,jdbcType=VARCHAR}, #{isTemporaryNo,jdbcType=DECIMAL}, #{carrierCode,jdbcType=VARCHAR}, 
+      #{carrierDriver,jdbcType=NVARCHAR}, #{carrierDriverPhone,jdbcType=NVARCHAR}, #{carrierVehicleNo,jdbcType=NVARCHAR}, 
+      #{totalPackageQuantity,jdbcType=DECIMAL}, #{totalVolume,jdbcType=DECIMAL}, #{totalWeight,jdbcType=DECIMAL}, 
+      #{settlementCycle,jdbcType=VARCHAR}, #{paymentType,jdbcType=VARCHAR}, #{calculateType,jdbcType=VARCHAR}, 
+      #{transportType,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, #{startCityCode,jdbcType=VARCHAR}, 
+      #{destCityCode,jdbcType=VARCHAR}, #{whetherSignReceipt,jdbcType=DECIMAL}, #{receiptPageNumber,jdbcType=DECIMAL}, 
+      #{goodsName,jdbcType=NVARCHAR}, #{handoverType,jdbcType=VARCHAR}, #{wrapType,jdbcType=VARCHAR}, 
+      #{consignee,jdbcType=NVARCHAR}, #{consigneeAddress,jdbcType=NVARCHAR}, #{consigneePhone,jdbcType=NVARCHAR}, 
+      #{transferOrganizationCode,jdbcType=VARCHAR}, #{transferSiteCode,jdbcType=VARCHAR},
+      #{whetherHaveUpstairsFee,jdbcType=DECIMAL},
+      #{remark,jdbcType=NVARCHAR}, #{createdBy,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP}, 
+      #{modifiedBy,jdbcType=VARCHAR}, #{modifyDate,jdbcType=TIMESTAMP})
+  </insert>
+    <insert id="batchInsert" parameterType="java.util.List">
+        insert into CONSIGN_ORDER (<include refid="Base_Column_List"/>)
+        (
+        <foreach collection="list" item="item" index="index" separator="union all">
+            select #{item.consignOrderId,jdbcType=VARCHAR}, #{item.branchCode,jdbcType=VARCHAR},
+            #{item.siteCode,jdbcType=VARCHAR},
+            #{item.consignOrderNo,jdbcType=VARCHAR}, #{item.isTemporaryNo,jdbcType=DECIMAL},
+            #{item.carrierCode,jdbcType=VARCHAR},
+            #{item.carrierDriver,jdbcType=NVARCHAR}, #{item.carrierDriverPhone,jdbcType=NVARCHAR},
+            #{item.carrierVehicleNo,jdbcType=NVARCHAR},
+            #{item.totalPackageQuantity,jdbcType=DECIMAL}, #{item.totalVolume,jdbcType=DECIMAL},
+            #{item.totalWeight,jdbcType=DECIMAL},
+            #{item.settlementCycle,jdbcType=VARCHAR}, #{item.paymentType,jdbcType=VARCHAR},
+            #{item.calculateType,jdbcType=VARCHAR},
+            #{item.transportType,jdbcType=VARCHAR}, #{item.status,jdbcType=VARCHAR},
+            #{item.startCityCode,jdbcType=VARCHAR},
+            #{item.destCityCode,jdbcType=VARCHAR}, #{item.whetherSignReceipt,jdbcType=DECIMAL},
+            #{item.receiptPageNumber,jdbcType=DECIMAL},
+            #{item.goodsName,jdbcType=NVARCHAR}, #{item.handoverType,jdbcType=VARCHAR},
+            #{item.wrapType,jdbcType=VARCHAR},
+            #{item.consignee,jdbcType=NVARCHAR}, #{item.consigneeAddress,jdbcType=NVARCHAR},
+            #{item.consigneePhone,jdbcType=NVARCHAR},
+            #{item.transferOrganizationCode,jdbcType=VARCHAR},
+            #{item.transferSiteCode,jdbcType=VARCHAR},#{item.whetherHaveUpstairsFee,jdbcType=DECIMAL},
+            #{item.remark,jdbcType=NVARCHAR}, #{item.createdBy,jdbcType=VARCHAR}, #{item.createDate,jdbcType=TIMESTAMP},
+            #{item.modifiedBy,jdbcType=VARCHAR}, #{item.modifyDate,jdbcType=TIMESTAMP} from dual
+        </foreach>
+        )
+    </insert>
+    <update id="update" parameterType="com.lnet.model.tms.consign.consignEntity.ConsignOrder">
+    update CONSIGN_ORDER
+    set BRANCH_CODE = #{branchCode,jdbcType=VARCHAR},
+      SITE_CODE = #{siteCode,jdbcType=VARCHAR},
+      CONSIGN_ORDER_NO = #{consignOrderNo,jdbcType=VARCHAR},
+      IS_TEMPORARY_NO = #{isTemporaryNo,jdbcType=DECIMAL},
+      CARRIER_CODE = #{carrierCode,jdbcType=VARCHAR},
+      CARRIER_DRIVER = #{carrierDriver,jdbcType=NVARCHAR},
+      CARRIER_DRIVER_PHONE = #{carrierDriverPhone,jdbcType=NVARCHAR},
+      CARRIER_VEHICLE_NO = #{carrierVehicleNo,jdbcType=NVARCHAR},
+      TOTAL_PACKAGE_QUANTITY = #{totalPackageQuantity,jdbcType=DECIMAL},
+      TOTAL_VOLUME = #{totalVolume,jdbcType=DECIMAL},
+      TOTAL_WEIGHT = #{totalWeight,jdbcType=DECIMAL},
+      SETTLEMENT_CYCLE = #{settlementCycle,jdbcType=VARCHAR},
+      PAYMENT_TYPE = #{paymentType,jdbcType=VARCHAR},
+      CALCULATE_TYPE = #{calculateType,jdbcType=VARCHAR},
+      TRANSPORT_TYPE = #{transportType,jdbcType=VARCHAR},
+      STATUS = #{status,jdbcType=VARCHAR},
+      START_CITY_CODE = #{startCityCode,jdbcType=VARCHAR},
+      DEST_CITY_CODE = #{destCityCode,jdbcType=VARCHAR},
+      WHETHER_SIGN_RECEIPT = #{whetherSignReceipt,jdbcType=DECIMAL},
+      RECEIPT_PAGE_NUMBER = #{receiptPageNumber,jdbcType=DECIMAL},
+      GOODS_NAME = #{goodsName,jdbcType=NVARCHAR},
+      HANDOVER_TYPE = #{handoverType,jdbcType=VARCHAR},
+      WRAP_TYPE = #{wrapType,jdbcType=VARCHAR},
+      CONSIGNEE = #{consignee,jdbcType=NVARCHAR},
+      CONSIGNEE_ADDRESS = #{consigneeAddress,jdbcType=NVARCHAR},
+      CONSIGNEE_PHONE = #{consigneePhone,jdbcType=NVARCHAR},
+      TRANSFER_ORGANIZATION_CODE = #{transferOrganizationCode,jdbcType=VARCHAR},
+      TRANSFER_SITE_CODE = #{transferSiteCode,jdbcType=VARCHAR},
+      WHETHER_HAVE_UPSTAIRS_FEE = #{whetherHaveUpstairsFee,jdbcType=DECIMAL},
+      REMARK = #{remark,jdbcType=NVARCHAR},
+      CREATED_BY = #{createdBy,jdbcType=VARCHAR},
+      CREATE_DATE = #{createDate,jdbcType=TIMESTAMP},
+      MODIFIED_BY = #{modifiedBy,jdbcType=VARCHAR},
+      MODIFY_DATE = #{modifyDate,jdbcType=TIMESTAMP}
+    where CONSIGN_ORDER_ID = #{consignOrderId,jdbcType=VARCHAR}
+  </update>
+    <select id="pageList" resultType="com.lnet.model.tms.consign.consignDto.ConsignOrderPageDto">
+        select c.CONSIGN_ORDER_ID, c.BRANCH_CODE, c.SITE_CODE, c.CONSIGN_ORDER_NO, c.IS_TEMPORARY_NO, c.CARRIER_CODE,
+        c.CARRIER_DRIVER, c.CARRIER_DRIVER_PHONE, c.CARRIER_VEHICLE_NO, c.TOTAL_PACKAGE_QUANTITY,
+        c.TOTAL_VOLUME, c.TOTAL_WEIGHT, c.SETTLEMENT_CYCLE, c.PAYMENT_TYPE, c.CALCULATE_TYPE, c.TRANSPORT_TYPE,
+        c.STATUS, c.START_CITY_CODE, c.DEST_CITY_CODE, c.WHETHER_SIGN_RECEIPT, c.RECEIPT_PAGE_NUMBER,
+        c.GOODS_NAME, c.HANDOVER_TYPE, c.WRAP_TYPE, c.CONSIGNEE, c.CONSIGNEE_ADDRESS, c.CONSIGNEE_PHONE,
+        c.TRANSFER_ORGANIZATION_CODE,c.TRANSFER_SITE_CODE, c.WHETHER_HAVE_UPSTAIRS_FEE, c.REMARK,
+        c.CREATED_BY, c.CREATE_DATE, c.MODIFIED_BY, c.MODIFY_DATE,ct.expected_Finish_Time,ct.consign_Time,ct.feedback_Consign_Time,ct.startup_Time,ct.arrive_Time
+        ,ct.finish_Time
+        from CONSIGN_ORDER c left join CONSIGN_ORDER_OPERATION_TIME ct on c.CONSIGN_ORDER_ID = ct.CONSIGN_ORDER_ID
+        <where>
+            <if test="consignOrderNo != null ">
+                CONSIGN_ORDER_NO like CONCAT(CONCAT('%', #{consignOrderNo}), '%')
+            </if>
+            <if test="branchCode != null ">
+                AND BRANCH_CODE = #{branchCode,jdbcType=NVARCHAR}
+            </if>
+            <if test="siteCode != null ">
+                AND SITE_CODE = #{siteCode,jdbcType=NVARCHAR}
+            </if>
+            <if test="transferOrganizationCode != null ">
+                AND TRANSFER_ORGANIZATION_CODE = #{transferOrganizationCode,jdbcType=NVARCHAR}
+            </if>
+            <if test="transferSiteCode != null ">
+                AND TRANSFER_SITE_CODE = #{transferSiteCode,jdbcType=NVARCHAR}
+            </if>
+            <if test="status != null ">
+                AND STATUS = #{status,jdbcType=NVARCHAR}
+            </if>
+            <if test="carrierCode != null ">
+                AND CARRIER_CODE = #{carrierCode,jdbcType=NVARCHAR}
+            </if>
+            <if test="consignee != null ">
+                AND CONSIGNEE like CONCAT(CONCAT('%', #{consignee}), '%')
+            </if>
+            <if test="transportType != null ">
+                AND TRANSPORT_TYPE = #{transportType,jdbcType=NVARCHAR}
+            </if>
+            <if test="createdBy != null ">
+                AND created_By = #{createdBy,jdbcType=NVARCHAR}
+            </if>
+            <if test="month != null ">
+                AND to_char(create_date,'YYYY-MM') = #{month,jdbcType=NVARCHAR}
+            </if>
+        </where>
+        <if test="orderBy !=null">
+            order by ${orderBy}
+        </if>
+        <if test="orderBy ==null">
+            order by create_Date desc
+        </if>
+    </select>
+    <select id="orderNoIsExists" resultType="boolean">
+        select
+        CASE WHEN count(0) > 0 THEN 1 ELSE 0 END
+        from CONSIGN_ORDER
+        <where>
+            <if test="carrierCode != null ">
+                CARRIER_CODE = #{carrierCode,jdbcType=NVARCHAR}
+            </if>
+            <if test="consignOrderNo != null ">
+                AND CONSIGN_ORDER_NO = #{consignOrderNo,jdbcType=NVARCHAR}
+            </if>
+            <if test="consignOrderId != null ">
+                AND CONSIGN_ORDER_ID != #{consignOrderId,jdbcType=NVARCHAR}
+            </if>
+        </where>
+    </select>
+    <update id="updateStatus">
+        update CONSIGN_ORDER set STATUS = #{status,jdbcType=NVARCHAR} where CONSIGN_ORDER_ID =#{consignOrderId,jdbcType=NVARCHAR}
+    </update>
+    <update id="batchUpdateStatus">
+        update CONSIGN_ORDER set STATUS = #{status,jdbcType=NVARCHAR} where CONSIGN_ORDER_ID in
+        <foreach collection="consignOrderIds" open="(" close=")" separator="," index="index" item="consignOrderId">
+            #{consignOrderId,jdbcType=NVARCHAR}
+        </foreach>
+    </update>
+    <select id="findByOrderNos" resultMap="BaseResultMap" parameterType="java.util.List">
+        select
+        <include refid="Base_Column_List"/>
+        from CONSIGN_ORDER where CONSIGN_ORDER_NO in
+        <foreach collection="list" open="(" close=")" separator="," index="index" item="item">
+            #{item,jdbcType=NVARCHAR}
+        </foreach>
+    </select>
+    <select id="getByNo" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from CONSIGN_ORDER where CARRIER_CODE = #{carrierCode,jdbcType=NVARCHAR}
+        and CONSIGN_ORDER_NO = #{consignOrderNo,jdbcType=NVARCHAR}
+    </select>
+
+    <select id="findByOrderNo" resultMap="BaseResultMap" parameterType="string">
+        select c.CONSIGN_ORDER_ID, c.BRANCH_CODE, c.SITE_CODE, c.CONSIGN_ORDER_NO, c.IS_TEMPORARY_NO, c.CARRIER_CODE,
+    c.CARRIER_DRIVER, c.CARRIER_DRIVER_PHONE, c.CARRIER_VEHICLE_NO, c.TOTAL_PACKAGE_QUANTITY,
+    c.TOTAL_VOLUME, c.TOTAL_WEIGHT, c.SETTLEMENT_CYCLE, c.PAYMENT_TYPE, c.CALCULATE_TYPE, c.TRANSPORT_TYPE,
+    c.STATUS, c.START_CITY_CODE, c.DEST_CITY_CODE, c.WHETHER_SIGN_RECEIPT, c.RECEIPT_PAGE_NUMBER,
+    c.GOODS_NAME, c.HANDOVER_TYPE, c.WRAP_TYPE, c.CONSIGNEE, c.CONSIGNEE_ADDRESS, c.CONSIGNEE_PHONE,
+    c.TRANSFER_ORGANIZATION_CODE,c.TRANSFER_SITE_CODE, c.WHETHER_HAVE_UPSTAIRS_FEE, c.REMARK,
+    c.CREATED_BY, c.CREATE_DATE, c.MODIFIED_BY, c.MODIFY_DATE from CONSIGN_ORDER c inner join CONSIGN_ORDER_ITEM i
+        on c.CONSIGN_ORDER_ID = i.CONSIGN_ORDER_ID
+        where i.ORDER_NO = #{orderNo,jdbcType=VARCHAR}
+    </select>
+    <select id="findByIds" resultMap="BaseResultMap" parameterType="java.util.List">
+        select
+        <include refid="Base_Column_List"/>
+        from CONSIGN_ORDER where CONSIGN_ORDER_ID in
+        <foreach collection="list" open="(" close=")" separator="," index="index" item="item">
+            #{item,jdbcType=NVARCHAR}
+        </foreach>
+    </select>
+    <select id="findOrderByMonth" resultType="com.lnet.model.tms.consign.consignDto.OrderMonthDto">
+        select to_char(create_date,'YYYY-MM') month ,count(0) COUNT from consign_order
+        where created_by  = #{createdBy,jdbcType=VARCHAR}
+        group by to_char(create_date,'YYYY-MM') order by month desc
+    </select>
+    <select id="getTodayConsignCount" resultType="java.lang.Integer">
+        select count(0) count from CONSIGN_ORDER where site_code =#{siteCode} and branch_code = #{branchCode}
+        and trunc(create_date) = trunc(sysdate)
+    </select>
+    <update id="updateOrderNo">
+        update CONSIGN_ORDER set CONSIGN_ORDER_NO = #{consignOrderNo,jdbcType=NVARCHAR},IS_TEMPORARY_NO = 0
+         where CONSIGN_ORDER_ID =#{consignOrderId,jdbcType=NVARCHAR}
+    </update>
+    <select id="findByCarrierCode" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from CONSIGN_ORDER where CARRIER_CODE = #{carrierCode,jdbcType=NVARCHAR}
+        AND STATUS IN
+        <foreach collection="statusList" open="(" close=")" separator="," index="index" item="status">
+            #{status,jdbcType=NVARCHAR}
+        </foreach>
+    </select>
+    <select id="findItemsByOrderNos" resultType="com.lnet.model.tms.consign.consignDto.ConsignDetailDto">
+        select DISTINCT c.carrier_code,c.consign_order_no,c.total_package_quantity,c.total_volume,c.total_weight,
+        c.calculate_type,c.payment_type ,ct.consign_time,ct.feedback_consign_time,ct.finish_time,
+        ci.order_no,ci.package_quantity,ci.volume,ci.weight``
+        from consign_order c
+        inner join consign_order_operation_time ct on ct.consign_order_id = c.consign_order_id
+        left join consign_order_item ci on ci.consign_order_id = c.consign_order_id
+        where ci.order_no in
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+</mapper>

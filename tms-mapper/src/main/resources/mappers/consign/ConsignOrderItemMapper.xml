@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lnet.tms.mapper.ConsignOrderItemMapper">
+    <resultMap id="BaseResultMap" type="com.lnet.model.tms.consign.consignEntity.ConsignOrderItem">
+        <id column="ITEM_ID" property="itemId" jdbcType="VARCHAR"/>
+        <result column="CONSIGN_ORDER_ID" property="consignOrderId" jdbcType="VARCHAR"/>
+        <result column="ORDER_NO" property="orderNo" jdbcType="VARCHAR"/>
+        <result column="PACKAGE_QUANTITY" property="packageQuantity" jdbcType="DECIMAL"/>
+        <result column="VOLUME" property="volume" jdbcType="DECIMAL"/>
+        <result column="WEIGHT" property="weight" jdbcType="DECIMAL"/>
+        <result column="RECEIPT_PAGE_NUMBER" property="receiptPageNumber" jdbcType="DECIMAL"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    ITEM_ID, CONSIGN_ORDER_ID, ORDER_NO, PACKAGE_QUANTITY, VOLUME, WEIGHT, RECEIPT_PAGE_NUMBER
+  </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from CONSIGN_ORDER_ITEM
+        where ITEM_ID = #{itemId,jdbcType=VARCHAR}
+    </select>
+    <delete id="delete" parameterType="java.lang.String">
+    delete from CONSIGN_ORDER_ITEM
+    where ITEM_ID = #{itemId,jdbcType=VARCHAR}
+  </delete>
+    <delete id="deleteByConsignOrderId" parameterType="java.lang.String">
+        delete from CONSIGN_ORDER_ITEM
+        where CONSIGN_ORDER_ID = #{consignOrderId,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.lnet.model.tms.consign.consignEntity.ConsignOrderItem">
+    insert into CONSIGN_ORDER_ITEM (ITEM_ID, CONSIGN_ORDER_ID, ORDER_NO, 
+      PACKAGE_QUANTITY, VOLUME, WEIGHT, 
+      RECEIPT_PAGE_NUMBER)
+    values (#{itemId,jdbcType=VARCHAR}, #{consignOrderId,jdbcType=VARCHAR}, #{orderNo,jdbcType=VARCHAR}, 
+      #{packageQuantity,jdbcType=DECIMAL}, #{volume,jdbcType=DECIMAL}, #{weight,jdbcType=DECIMAL}, 
+      #{receiptPageNumber,jdbcType=DECIMAL})
+  </insert>
+    <insert id="batchInsert" parameterType="java.util.List">
+        insert into CONSIGN_ORDER_ITEM (ITEM_ID, CONSIGN_ORDER_ID, ORDER_NO,
+        PACKAGE_QUANTITY, VOLUME, WEIGHT,
+        RECEIPT_PAGE_NUMBER)
+        (
+        <foreach collection="list" item="item" index="index" separator="union all">
+            select #{item.itemId,jdbcType=VARCHAR}, #{item.consignOrderId,jdbcType=VARCHAR},
+            #{item.orderNo,jdbcType=VARCHAR},
+            #{item.packageQuantity,jdbcType=DECIMAL}, #{item.volume,jdbcType=DECIMAL},
+            #{item.weight,jdbcType=DECIMAL},
+            #{item.receiptPageNumber,jdbcType=DECIMAL} from dual
+        </foreach>
+        )
+    </insert>
+    <update id="update" parameterType="com.lnet.model.tms.consign.consignEntity.ConsignOrderItem">
+    update CONSIGN_ORDER_ITEM
+    set CONSIGN_ORDER_ID = #{consignOrderId,jdbcType=VARCHAR},
+      ORDER_NO = #{orderNo,jdbcType=VARCHAR},
+      PACKAGE_QUANTITY = #{packageQuantity,jdbcType=DECIMAL},
+      VOLUME = #{volume,jdbcType=DECIMAL},
+      WEIGHT = #{weight,jdbcType=DECIMAL},
+      RECEIPT_PAGE_NUMBER = #{receiptPageNumber,jdbcType=DECIMAL}
+    where ITEM_ID = #{itemId,jdbcType=VARCHAR}
+  </update>
+    <select id="findByConsignOrderId" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from CONSIGN_ORDER_ITEM
+        where CONSIGN_ORDER_ID = #{consignOrderId,jdbcType=VARCHAR}
+    </select>
+    <update id="batchUpdate" parameterType="java.util.List">
+        <foreach collection="list" item="item" index="index" open="begin" close=";end;" separator=";">
+            update CONSIGN_ORDER_ITEM
+            set CONSIGN_ORDER_ID = #{item.consignOrderId,jdbcType=VARCHAR},
+            ORDER_NO = #{item.orderNo,jdbcType=VARCHAR},
+            PACKAGE_QUANTITY = #{item.packageQuantity,jdbcType=DECIMAL},
+            VOLUME = #{item.volume,jdbcType=DECIMAL},
+            WEIGHT = #{item.weight,jdbcType=DECIMAL},
+            RECEIPT_PAGE_NUMBER = #{item.receiptPageNumber,jdbcType=DECIMAL}
+            where ITEM_ID = #{item.itemId,jdbcType=VARCHAR}
+        </foreach>
+    </update>
+    <delete id="batchDelete" parameterType="java.util.List">
+        delete from CONSIGN_ORDER_ITEM
+        where ITEM_ID in
+        <foreach collection="list" open="(" close=")" separator="," index="index" item="item">
+            #{item.itemId,jdbcType=NVARCHAR}
+        </foreach>
+    </delete>
+    <select id="findByConsignOrderIds" parameterType="java.util.List" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from CONSIGN_ORDER_ITEM
+        where CONSIGN_ORDER_ID in
+        <foreach collection="list" open="(" close=")" separator="," index="index" item="item">
+            #{item,jdbcType=NVARCHAR}
+        </foreach>
+    </select>
+</mapper>

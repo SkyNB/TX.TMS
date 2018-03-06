@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>tms</artifactId>
+        <groupId>com.lnet.tms</groupId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>tms-service</artifactId>
+
+    <dependencies>
+        <!-- project inner dependencies-->
+        <dependency>
+            <groupId>com.lnet.tms</groupId>
+            <artifactId>tms-mapper</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.lnet.tms</groupId>
+            <artifactId>tms-contract</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.lnet.tms</groupId>
+            <artifactId>tms-common</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <!-- end project inner dependencies-->
+
+        <dependency>
+            <artifactId>oms-contract</artifactId>
+            <groupId>com.lnet.oms</groupId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <artifactId>ums-contract</artifactId>
+            <groupId>com.lnet.ums</groupId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.lnet.framework</groupId>
+            <artifactId>framework-excel</artifactId>
+            <version>1.1.3-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
+</project>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+    <import resource="classpath:service-spring.xml"/>
+
+    <!--<dubbo:application name="microServices-publisher"/>
+    <dubbo:registry address="zookeeper://192.168.10.50:2181" client="zkclient"/>-->
+    <dubbo:protocol name="dubbo" port="20873"/>
+    <dubbo:provider timeout="5000" retries="0" serialization="java"/>
+
+    <!--调配 提供者-->
+    <dubbo:service id="transferService" interface="com.lnet.tms.contract.spi.TransferService" ref="transferServiceImpl" />
+    <!--回单-->
+    <dubbo:service id="receiptService" interface="com.lnet.tms.contract.spi.ReceiptService" ref="receiptServiceImpl"/>
+    <!--信息跟踪-->
+    <dubbo:service id="progressTraceService" interface="com.lnet.tms.contract.spi.ProgressTraceService" ref="progressTraceServiceImpl"/>
+    <!--异常处理-->
+    <dubbo:service id="exceptionService" interface="com.lnet.tms.contract.spi.ExceptionService" ref="exceptionServiceImpl"/>
+    <dubbo:service id="exceptionTypeService" interface="com.lnet.tms.contract.spi.ExceptionTypeService" ref="exceptionTypeServiceImpl"/>
+
+
+</beans>

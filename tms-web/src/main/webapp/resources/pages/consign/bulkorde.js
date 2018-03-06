@@ -1,0 +1,1 @@
+angular.module('RoadnetApp').controller('ConsignBulkordeController', ['$rootScope', '$scope', ConsignBulkordeController]);
